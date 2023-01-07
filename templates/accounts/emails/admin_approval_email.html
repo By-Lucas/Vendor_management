@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Olá {{user.name}},
+
+{% if is_approved %}
+Parabéns! Seu restaurante foi aprovado por nossa equipe de administração. --TK GLobal
+{% else %}
+Nós lamentamos! Você não é elegível para publicar seu menu de comida em nosso mercado. Para mais detalhes, entre em contato com tekertudo@gmail.com. --TK Global
+{% endif %}
+
+
+
+{% endautoescape %}
