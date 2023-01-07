@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<h1>Pagina do Perfil Fornecedor {{request.user.name}}</h1>
+
+{{profile}}
+
+{{vendor}}
+
+{% endblock body %}

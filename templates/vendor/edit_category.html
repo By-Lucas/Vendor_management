@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<h1>Editar Categoria {{request.user.name}}</h1>
+
+{{form}}
+
+{{category}}
+
+
+{% endblock body %}

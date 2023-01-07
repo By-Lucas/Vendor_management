@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<h1>Protudos por categoria {{request.user.name}}</h1>
+
+{{category}}
+
+{{vendor}}
+
+{% endblock body %}

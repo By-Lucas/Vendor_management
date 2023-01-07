@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<h1>Categorias {{request.user.name}}</h1>
+
+{% for categorie in categories %}
+
+{{categorie}}
+
+{% endfor %}
+
+
+
+{% endblock body %}

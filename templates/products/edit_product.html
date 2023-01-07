@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<h1>Editar produto {{request.user.name}}</h1>
+
+{{prod}}
+<br>
+
+{{form}}
+
+
+{% endblock body %}
