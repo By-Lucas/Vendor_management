@@ -13,7 +13,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('product_title',)}
     list_display = ('product_title', 'category', 'is_available', 'updated_at')
-    search_fields = ('product_title', 'category__category_name', 'price')
+    search_fields = ('product_title', 'category__category_name')
     list_filter = ('is_available',)
 
 

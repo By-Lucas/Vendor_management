@@ -10,7 +10,7 @@ class VendorAdmin(admin.ModelAdmin):
 
 
 class VendorProductValueAdmin(admin.ModelAdmin):
-    list_display = ('product', 'price_product')
+    list_display = ('product', 'vendor', 'price_product')
     list_display_links = ('product',)
 
 

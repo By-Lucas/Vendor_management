@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<h1>Fornecedor Bashboard {{request.user.name}}</h1>
+
+{% for product in products %}
+
+    {{product.vendor}} <br>
+    {{product.product}}<br><br>
+
+
+{% endfor %}
+
+
+
+{% endblock body %}

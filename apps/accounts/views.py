@@ -1,27 +1,24 @@
-from datetime import datetime
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import message
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
+from django.template.defaultfilters import slugify
 from django.utils.http import urlsafe_base64_decode
+from django.contrib import messages, auth
+from django.contrib.auth.decorators import login_required, user_passes_test
+import datetime
 
 from vendor.forms import VendorForm
 from accounts.forms import UserForm
 from accounts.models import User
 from accounts.others_models.model_profile import UserProfile
 
-from django.contrib import messages, auth
+from helpers.decorators import vendor_level_required, customer_level_required, admin_level_required
 from helpers.utils import detectUser, send_verification_email
-
 from helpers import commons
 
-from django.contrib.auth.decorators import login_required, user_passes_test
-
-from django.core.exceptions import PermissionDenied
 from vendor.model.vendor_models import Vendor
-from django.template.defaultfilters import slugify
-#from orders.models import Order
-import datetime
+from vendor.model.product_value_model import VendorProductValue
+
 
 
 def registerUser(request):
@@ -159,3 +156,74 @@ def login(request):
             return redirect('login')
 
     return render(request, 'accounts/login.html')
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, 'Você está desconectado.')
+    return redirect('login')
+
+@login_required(login_url='login')
+@admin_level_required
+def vendorDashboard(request):
+    vendor = Vendor.objects.get(user=request.user)
+    products = VendorProductValue.objects.filter(vendor=vendor.id, product__is_available=True)#.order_by('created_at')
+    recent_products = products[:10]
+
+    context = {
+        'products': products,
+        'recent_products': recent_products
+    }
+    return render(request, 'vendor/vendorDashboard.html', context)
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            # send reset password email
+            mail_subject = 'Redefina sua senha'
+            email_template = 'accounts/emails/reset_password_email.html'
+            send_verification_email(request, user, mail_subject, email_template)
+
+            messages.success(request, 'O link de redefinição de senha foi enviado para o seu endereço de e-mail.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Conta não existe')
+            return redirect('forgot_password')
+    return render(request, 'accounts/forgot_password.html')
+
+def reset_password_validate(request, uidb64, token):
+    # validate the user by decoding the token and user pk
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.info(request, 'Redefina sua senha')
+        return redirect('reset_password')
+    else:
+        messages.error(request, 'Este link expirou!')
+        return redirect('myAccount')
+
+def reset_password(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        if password == confirm_password:
+            pk = request.session.get('uid')
+            user = User.objects.get(pk=pk)
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Redefinição de senha bem-sucedida')
+            return redirect('login')
+        else:
+            messages.error(request, 'Senha não confere!')
+            return redirect('reset_password')
+    return render(request, 'accounts/reset_password.html')
