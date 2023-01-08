@@ -27,7 +27,8 @@ DJANGO_APPS = [
 
 # Application dependent apps
 THIRD_APPS = [
-    'rest_framework'
+    'rest_framework',
+    'django_forms_bootstrap'
 ]
 
 # New apps added

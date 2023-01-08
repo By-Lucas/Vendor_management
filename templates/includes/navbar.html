@@ -1,0 +1,21 @@
+<!-- banner bg main start -->
+<div class="banner_bg_main">
+    <!-- header top section start -->
+    <div class="container">
+       <div class="header_section_top">
+          <div class="row">
+             <div class="col-sm-12">
+                <div class="custom_menu">
+                   <ul>
+                     <li><a href="{% url 'home' %}">Home</a></li>
+                     <li><a href="#">Produtos</a></li>
+                     <li><a href="#">Fornecedores</a></li>
+                  {% if request.user.is_authenticated %}
+                     <li><a href="#">Perfil</a></li>
+                  {% endif %}
+                   </ul>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>

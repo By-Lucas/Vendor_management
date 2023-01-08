@@ -49,10 +49,11 @@ def registerUser(request):
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
             messages.success(request, 'Sua conta foi cadastrada com sucesso, verifique seu email para ativa-la.')
-            return redirect('registerUser')
+            return redirect('home')
         else:
-            print('formulário inválido')
-            print(form.errors)
+            messages.error(request, f'Tivemos o seguinte erro ao registrar novo usuário: {form.errors}')
+            return redirect('registerUser')
+            
     else:
         form = UserForm()
     context = {
