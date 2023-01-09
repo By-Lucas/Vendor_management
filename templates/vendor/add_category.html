@@ -2,7 +2,7 @@
 
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 
-<form hx-post="{{ request.path }}"  class="modal-content"> {% csrf_token %}
+<form hx-post="{% url 'add_category' %}"  class="modal-content"> {% csrf_token %}
     <div class="modal-header">
         <h5 class="modal-title">Adicionar nova categoria</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

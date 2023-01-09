@@ -1,5 +1,8 @@
-from django.shortcuts import get_object_or_404, redirect, render
-
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.template.defaultfilters import slugify
+import json
 from products.forms import CategoryForm, ProductForm
 from vendor.forms import VendorForm
 from accounts.forms import UserProfileForm
@@ -8,11 +11,8 @@ from accounts.others_models.model_profile import UserProfile
 from products.models.category_model import Category
 from products.models.product_model import Product
 from vendor.model.vendor_models import Vendor
-from django.contrib import messages
 
-from django.contrib.auth.decorators import login_required, user_passes_test
 from helpers.decorators import vendor_level_required, customer_level_required, admin_level_required
-from django.template.defaultfilters import slugify
 
 
 def get_vendor(request):
@@ -55,7 +55,7 @@ def menu_builder(request):
     context = {
         'categories': categories,
     }
-    return render(request, 'vendor/menu_builder.html', context)
+    return render(request, 'vendor/category-list.html', context)
 
 @login_required(login_url='login')
 #@admin_level_required
@@ -76,12 +76,18 @@ def add_category(request):
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
-            #category.vendor = get_vendor(request)
-            #category.save() # here the category id will be generated
             category.slug = slugify(category_name)+'-'+str(category.id) # chicken-15
             category.save()
             messages.success(request, 'Categoria adicionada com sucesso!')
-            return redirect('menu_builder')
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "ProductListChanged": None,
+                    "showMessage": f"Categoria adicionada com sucesso..."
+                    })
+                }
+            )
         else:
             print(form.errors)
 

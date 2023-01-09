@@ -1,0 +1,12 @@
+{% load static %}
+
+{% for category in categories %}
+    <div class="col-lg-3 col-sm-3">
+        <div  class="box_main">
+            <h4 class="shirt_text">{{ category.category_name }}</h4>
+            <div class="btn_main">
+                {{ category.description }}
+            </div>
+        </div>
+    </div>
+{% endfor %}
