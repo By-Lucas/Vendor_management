@@ -6,6 +6,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
 import datetime
+import json
 
 from vendor.forms import VendorForm
 from accounts.forms import UserForm
@@ -25,35 +26,30 @@ def registerUser(request):
     if request.user.is_authenticated:
         messages.warning(request, 'Você já está logado!')
         return redirect('home')
+
     elif request.method == 'POST':
         form = UserForm(request.POST)
-        if form.is_valid():
 
+        if form.is_valid():
             # Create the user using the form
             user = form.save(commit=False)
             user.role = commons.USER_COMMOM
             user.save()
 
-            # Create the user using create_user method
-            # name = form.cleaned_data['name']
-            # email = form.cleaned_data['email']
-            # username = form.cleaned_data['username']
-            # password = form.cleaned_data['password']
-            # confirm_password = form.cleaned_data['confirm_password']
-            # user = User.objects.create_user(name=name, email=email, username=username, password=password, confirm_password=confirm_password)
-            # user.role = commons.USER_COMMOM
-            # user.save()
-
-            # Send verification email
             mail_subject = 'Por favor, ative sua conta'
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
             messages.success(request, 'Sua conta foi cadastrada com sucesso, verifique seu email para ativa-la.')
             return redirect('home')
         else:
-            messages.error(request, f'Tivemos o seguinte erro ao registrar novo usuário: {form.errors}')
-            return redirect('registerUser')
-            
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "showMessage": f'Tivemos o seguinte erro ao registrar novo usuário: {form.errors}'
+                    })
+                }
+            ) 
     else:
         form = UserForm()
     context = {
@@ -65,19 +61,30 @@ def registerUser(request):
 def registerVendor(request):
     if request.user.is_authenticated:
         messages.warning(request, 'Você já está logado!')
-        return redirect('home') #myAccount
+        return redirect('home')
+
     elif request.method == 'POST':
         # store the data and create the user
         form = UserForm(request.POST)
         v_form = VendorForm(request.POST, request.FILES)
+        
         if form.is_valid() and v_form.is_valid:
-
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             confirm_password = form.cleaned_data['confirm_password']
-            user = User.objects.create_user(name=name, email=email, username=username, password=password, confirm_password=confirm_password)
+            if password != confirm_password:
+                return HttpResponse(
+                    status=204,
+                    headers={
+                        'HX-Trigger': json.dumps({
+                        "showMessage": "Sua senha está incorreta, verifique e tente novamente"
+                        })
+                    }
+                ) 
+
+            user = User.objects.create_user(name=name, email=email, username=username, password=password)
             user.role = commons.VENDOR
             user.save()
             

@@ -1,12 +1,28 @@
-{% extends 'base.html' %}
+{% load widget_tweaks %}
 
-{% load static %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
 
-{% block body %}
+<form hx-post="{{ request.path }}"  class="modal-content"> {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Adicionar nova categoria</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                {% render_field form.category_name class="form-control" placeholder="Nome da categoria" %}
+            </div>
+            <div class="col-md-12 pt-2">
+                {% render_field form.description class="form-control" placeholder="Descrição da categoria" %}
+            </div>
+        </div>
+    </div>
 
-<h1>Adiconar Categoria {{request.user.name}}</h1>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-primary">Adicionar</button>
+    </div>
+</div>
+</form>
 
-{{form}}
-
-
-{% endblock body %}
+  {% endwith %}

@@ -1,10 +1,8 @@
-from enum import unique
 from django.db import models
 from accounts.models import User
 from accounts.others_models.model_profile import UserProfile
-from products.models.product_model import Product
 from helpers.utils import send_notification
-from datetime import time, date, datetime
+from django.utils.translation import gettext_lazy as _
 
 class Vendor(models.Model):
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)

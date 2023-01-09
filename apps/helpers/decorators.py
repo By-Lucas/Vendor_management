@@ -1,4 +1,5 @@
 from functools import wraps
+from django.shortcuts import HttpResponse
 from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.shortcuts import redirect
@@ -6,6 +7,8 @@ from django.shortcuts import redirect
 from helpers import commons
 from accounts.models import User
 from vendor.model.vendor_models import Vendor
+
+import json
 
 
 def admin_level_required(view_func):
@@ -23,8 +26,14 @@ def admin_level_required(view_func):
             response = view_func(request, *args, **kwargs)
             return response
         else:
-            messages.warning(request, _('Você não tem permissão pra acessar o recurso'))
-            return redirect('home')
+            return HttpResponse(
+                status=404,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "showMessage": "Você não tem permissão pra acessar o recurso"
+                    })
+                }
+            )
 
     return wraps(view_func)(_decorator)
 
@@ -43,8 +52,14 @@ def vendor_level_required(view_func):
             response = view_func(request, *args, **kwargs)
             return response
         else:
-            messages.warning(request, _('Você não tem permissão pra acessar o recurso'))
-            return redirect('home')
+            return HttpResponse(
+                status=404,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "showMessage": "Você não tem permissão pra acessar o recurso"
+                    })
+                }
+            )
 
     return wraps(view_func)(_decorator)
 
@@ -61,7 +76,13 @@ def customer_level_required(view_func):
             response = view_func(request, *args, **kwargs)
             return response
         else:
-            messages.warning(request, _('Você não tem permissão pra acessar o recurso.'))
-            return redirect('home')
+            return HttpResponse(
+                status=404,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "showMessage": "Você não tem permissão pra acessar o recurso"
+                    })
+                }
+            )
 
     return wraps(view_func)(_decorator)
