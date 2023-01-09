@@ -14,6 +14,9 @@ def detectUser(user):
     if user.role == commons.VENDOR:
         redirectUrl = 'home'
         return redirectUrl
+    if user.role == commons.ADMIN_SISTEM:
+        redirectUrl = 'home'
+        return redirectUrl
     elif user.role == commons.USER_COMMOM:
         redirectUrl = 'home'
         return redirectUrl

@@ -28,7 +28,9 @@ DJANGO_APPS = [
 # Application dependent apps
 THIRD_APPS = [
     'rest_framework',
-    'django_forms_bootstrap'
+    'django_forms_bootstrap',
+    'django_filters',
+    'widget_tweaks'
 ]
 
 # New apps added
@@ -133,11 +135,11 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 MESSAGE_TAGS = {
-constants.DEBUG: 'alert-primary',
-constants.ERROR: 'alert-danger',
-constants.SUCCESS: 'alert-success',
-constants.INFO: 'alert-info',
-constants.WARNING: 'alert-warning',
+constants.DEBUG: 'primary',
+constants.ERROR: 'danger',
+constants.SUCCESS: 'success',
+constants.INFO: 'info',
+constants.WARNING: 'warning',
 }
 
 

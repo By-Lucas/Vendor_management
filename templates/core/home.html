@@ -1,8 +1,22 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load widget_tweaks %}
 
 {% block body %}
+
+<!--=====INCLUDE HEADER=====-->
+{% include 'includes/header.html' %}
+
+<style>
+   .electronic_img{
+      max-height: 200px;
+      max-width: 300px;
+   }
+   .btn_main{
+      margin-top: -150px;
+   }
+</style>
 
 <!-- Home section start -->
 <div class="fashion_section">
@@ -10,67 +24,34 @@
        <div class="carousel-inner">
           <div class="carousel-item active">
              <div class="container">
-                <h1 class="fashion_taital">Electronic</h1>
+                <h1 class="fashion_taital">Produtos</h1>
                 <div class="fashion_section_2">
-                   <div class="row">
-                      <div class="col-lg-3 col-sm-3">
-                         <div class="box_main">
-                            <h4 class="shirt_text">Laptop</h4>
-                            <p class="price_text">Menor preço <span style="color: #262626;">R$ 100</span></p>
-                            <div class="electronic_img"><img src="{% static 'images/laptop-img.png' %}"></div>
-                            <div class="btn_main">
-                               <div class="buy_bt"><a href="#">Forncedores</a></div>
-                               <div class="seemore_bt"><a href="#">Salvar</a></div>
-                            </div>
-                         </div>
-                      </div>
-                      <div class="col-lg-3 col-sm-3">
-                         <div class="box_main">
-                            <h4 class="shirt_text">Mobile</h4>
-                            <p class="price_text">Start Price  <span style="color: #262626;">$ 100</span></p>
-                            <div class="electronic_img"><img src="{% static 'images/mobile-img.png' %}"></div>
-                            <div class="btn_main">
-                               <div class="buy_bt"><a href="#">Buy Now</a></div>
-                               <div class="seemore_bt"><a href="#">See More</a></div>
-                            </div>
-                         </div>
-                      </div>
-                      <div class="col-lg-3 col-sm-3">
-                         <div class="box_main">
-                            <h4 class="shirt_text">Computers</h4>
-                            <p class="price_text">Start Price  <span style="color: #262626;">$ 100</span></p>
-                            <div class="electronic_img"><img src="{% static 'images/computer-img.png' %}"></div>
-                            <div class="btn_main">
-                               <div class="buy_bt"><a href="#">Buy Now</a></div>
-                               <div class="seemore_bt"><a href="#">See More</a></div>
-                            </div>
-                         </div>
-                      </div>
-                      <div class="col-lg-3 col-sm-3">
-                        <div class="box_main">
-                           <h4 class="shirt_text">Computers</h4>
-                           <p class="price_text">Start Price  <span style="color: #262626;">$ 100</span></p>
-                           <div class="electronic_img"><img src="{% static 'images/computer-img.png' %}"></div>
-                           <div class="btn_main">
-                              <div class="buy_bt"><a href="#">Buy Now</a></div>
-                              <div class="seemore_bt"><a href="#">See More</a></div>
-                           </div>
+                  <div class="row" >
+                     <div class="row" hx-trigger="load, ProductListChanged from:div" hx-get="{% url 'product_list' %}" hx-target="this" hx-swap="innerHTML">
+                        <div class="spinner-border" role="status">
+                           <span class="visually-hidden">Loading...</span>
                         </div>
                      </div>
-                   </div>
+                  </div>
                 </div>
              </div>
           </div>
-
        </div>
-       <a class="carousel-control-prev" href="#electronic_main_slider" role="button" data-slide="prev">
-       <i class="fa fa-angle-left"></i>
-       </a>
-       <a class="carousel-control-next" href="#electronic_main_slider" role="button" data-slide="next">
-       <i class="fa fa-angle-right"></i>
-       </a>
     </div>
  </div>
  <!-- Home section end -->
 
+ {% include 'products/includes/modal-product.html' %}
+
+ <!-- Empty toast to show the message -->
+<div class="toast-container position-fixed top-1 end-0 p-3">
+   <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+     <div class="d-flex">
+       <div id="toast-body" class="toast-body"></div>
+         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+     </div>
+   </div>
+ </div>
+
+ 
 {% endblock body %}

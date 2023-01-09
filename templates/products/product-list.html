@@ -1,0 +1,22 @@
+{% load static %}
+
+{% for product in product_filter.qs %}
+    <div class="col-lg-3 col-sm-3">
+        <div  class="box_main">
+            <h4 class="shirt_text">{{ product.product_title }}</h4>
+            <p class="price_text">Menor preço <span style="color: #262626;">R$ 100</span></p>
+            {% if product.image_product %}
+                <div class="electronic_img"><img src="{{ product.image_product.url }}"></div>
+            {% else %}
+                <div class="electronic_img"><img src="{% static 'images/not-image.gif' %}"></div>
+            {% endif %}
+            <div class="btn_main">
+                <div class="buy_bt"><a href="#">Forncedores</a></div>
+                <div class="seemore_bt">
+                    <buttom href="" class="btn btn-primary btn-sm" hx-get="{% url 'edit_product' product.pk %}" 
+                    hx-target="#dialog" data-bs-toggle="modal" data-bs-target="#modal">Editar</buttom>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

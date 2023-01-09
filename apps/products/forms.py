@@ -13,7 +13,8 @@ class CategoryForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    image = forms.FileField(widget=forms.FileInput(attrs={'class': 'btn btn-info w-100'}), validators=[allow_only_images_validator])
+    image_product = forms.ImageField(validators=[allow_only_images_validator])
+    is_available = forms.BooleanField(label='Status do produto', required=False)
     class Meta:
         model = Product
-        fields = ['category', 'product_title', 'description', 'image', 'is_available']
+        fields = ['category', 'product_title', 'description', 'image_product', 'is_available']

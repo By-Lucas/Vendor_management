@@ -135,7 +135,7 @@ def activate(request, uidb64, token):
 def myAccount(request):
     user = request.user
     redirectUrl = detectUser(user)
-    return redirect(redirectUrl)
+    return redirect('home')
 
 def login(request):
     if request.user.is_authenticated:
@@ -160,7 +160,7 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
-    messages.info(request, 'Você está desconectado.')
+    messages.error(request, 'Você está desconectado.')
     return redirect('login')
 
 @login_required(login_url='login')

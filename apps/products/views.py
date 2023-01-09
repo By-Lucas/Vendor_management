@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
+import json
 
 from products.forms import ProductForm
 from products.models.category_model import Category
@@ -26,8 +27,15 @@ def add_product(request):
             product = form.save(commit=False)
             product.slug = slugify(product_title)
             product.save()
-            messages.success(request, 'Produto adicionado com sucesso!')
-            return redirect('product_by_category', product.category.id)
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "ProductListChanged": None,
+                    "showMessage": f"Produto {product} adicionado com sucesso.."
+                    })
+                }
+            )
         else:
             print(form.errors)
     else:
@@ -36,6 +44,7 @@ def add_product(request):
         'form': form,
     }
     return render(request, 'products/add_product.html', context)
+
 
 @login_required(login_url='login')
 @admin_level_required
@@ -48,8 +57,15 @@ def edit_product(request, pk=None):
             product = form.save(commit=False)
             product.slug = slugify(product_title)
             form.save()
-            messages.success(request, 'Produto atualizado com sucesso!')
-            return redirect('product_by_category', prod.category.id)
+            return HttpResponse(
+                status=204,
+                headers={
+                    'HX-Trigger': json.dumps({
+                    "ProductListChanged": None,
+                    "showMessage": f"Produto {product} editado com sucesso.."
+                    })
+                }
+            )
         else:
             print(form.errors)
 

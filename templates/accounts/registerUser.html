@@ -16,8 +16,7 @@
 
     <link rel="stylesheet" href="{% static 'login/css/owl.carousel.min.css' %}">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'login/css/bootstrap.min.css' %}">
+    {% include 'includes/scripts-head.html' %}
     
     <!-- Style -->
     <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
@@ -25,6 +24,8 @@
     <title>Novo usuario</title>
   </head>
   <body>
+    <!--=====INCLUDE JAVASCRIPT=====-->
+    {% include 'includes/alerts.html' %}
   
   <div class="d-lg-flex half">
     <img class="bg order-1 order-md-2" src="{% static 'images/banner-bg.png' %}" alt="{% static 'images/banner-bg.png' %}">
@@ -36,18 +37,19 @@
             <h3>Novo <strong>usuário</strong></h3>
             <p class="mb-4">Digite os dados do novo usuário.</p>
             
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <!-- Load message -->
-                    {% include 'includes/alerts.html' %}
-                </div>
-            </div>
 
             <form action="{% url 'registerUser' %}" method="post"> {% csrf_token %}
                     {{form|as_bootstrap }}
                 
-                <button type="submit" value="Log In" class="btn btn-primary">Cadastrar</button>
-                <a href="{% url 'home' %}"  class="btn btn-primary">Inicio</a>
+                <div class="row">
+                  <div class="col-sm">
+                    <button type="submit" value="Log In" class="btn btn-block btn-warning">Cadastrar</button>
+                  </div>
+                  <div class="col-sm">
+                    <button type="button" onClick="history.go(-1);" class="btn btn-block btn-primary">Voltar</button>
+                  </div>
+                </div>
+
 
             </form>
           </div>

@@ -1,10 +1,31 @@
+
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{message.tags}} show-notification" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-           <strong>{{message}}</strong>
+    <div id="alert_message" aria-live="polite" aria-atomic="true" class="position-relative">
+        <div class="toast-container position-absolute top-0 end-0 p-3">
+            <div class="toast col-md-12 alert alert-{{message.tags}} text-white bg-{{message.tags}} alert-dismissible fade show"  role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+                <strong>{{message}}</strong>
+            </div>
         </div>
+    </div>
+
+    <script>
+        $(function() {
+            if ($('#alert_message').length) {
+                setTimeout(() => {
+                    $('#alert_message').hide('slideUp')
+                    setTimeout(() => {
+                        $('#alert_message').remove()
+                    }, 500)
+                }, 3500)
+            }
+        })
+    </script>
+
     {% endfor %}
+
 {% endif %}
+
+

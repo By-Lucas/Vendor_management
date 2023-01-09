@@ -14,37 +14,31 @@
     <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <!-- site metas -->
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
+
     
     <title>Imobi {% block title %}{% endblock title %}</title>
 
- </head>
-    
-</head>
-<body>
+    </head>
+        
+    <body>
 
-    <!--=====NAVBAR=====-->
-    {% include 'includes/navbar.html' %}
+        <!--=====NAVBAR=====-->
+        {% include 'includes/navbar.html' %}
 
-    <!--=====INCLUDE HEADER:CSS, JS...=====-->
-    {% include 'includes/header.html' %}
+        <!--=====BLOCK BODY/MENU=====-->
+        {% block body %}{% endblock body %}
 
-    <!--=====BLOCK BODY/MENU=====-->
-    {% block body %}{% endblock body %}
+        <!--=====INCLUDE JAVASCRIPT=====-->
+        {% include 'includes/alerts.html' %}
+        
+        <!--=====FOOTER=====-->
+        {% include 'includes/footer.html' %}
 
-    <!--=====MODAL REGISTER USER=====-->
-    {% include 'includes/modal-register.html' %}
+        <!--=====BLOCK JAVASCRIPT=====-->
+        {% block js %}{% endblock js %}
 
-    <!--=====FOOTER=====-->
-    {% include 'includes/footer.html' %}
-
-    <!--=====BLOCK JAVASCRIPT=====-->
-    {% block js %}{% endblock js %}
-
-    <!--=====INCLUDE JAVASCRIPT=====-->
-    {% include 'includes/scripts-js.html' %}
-</body>
+        <!--=====INCLUDE JAVASCRIPT=====-->
+        {% include 'includes/scripts-js.html' %}
+        
+    </body>
 </html>
