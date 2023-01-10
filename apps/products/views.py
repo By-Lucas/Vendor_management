@@ -27,17 +27,11 @@ def add_product(request):
             product = form.save(commit=False)
             product.slug = slugify(product_title)
             product.save()
-            return HttpResponse(
-                status=204,
-                headers={
-                    'HX-Trigger': json.dumps({
-                    "ProductListChanged": None,
-                    "showMessage": f"Produto {product} adicionado com sucesso.."
-                    })
-                }
-            )
+            messages.success(request, 'Produto adicionaro com sucesso.')
+            return redirect('home')
         else:
-            print(form.errors)
+            messages.error(request, f'Obteve o seguinte erro: {form.errors}')
+            return redirect('home')
     else:
         form = ProductForm()
     context = {

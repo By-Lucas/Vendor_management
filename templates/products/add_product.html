@@ -1,7 +1,5 @@
 {% load widget_tweaks %}
 
-{% with WIDGET_ERROR_CLASS='is-invalid' %}
-
 <form hx-post="{% url 'add_product' %}"  class="modal-content"> {% csrf_token %}
     <div class="modal-header">
         <h5 class="modal-title">Adicionar novo produto</h5>
@@ -9,35 +7,55 @@
     </div>
     <div class="modal-body">
         <div class="row">
+
             <div class="col-md-4">
-                {% render_field form.category class="form-control" %}
+                <label for="categoria" class="form-label">Categoria</label>
+                <select name="category" class="form-select" aria-label="Default select example" id="categoria">
+                    {% for cate in category %}
+                        <option value="{{cate.id}}">{{cate}}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="col-sm-8">
-                {% render_field form.product_title class="form-control" %}
+            
+            <div class="col-md-8">
+                <label for="product_title" class="form-label">Produto</label>
+                <input type="text" name="product_title" class="form-control" id="product_title" placeholder="Nome do produto">
             </div>
-            <div class="col-sm col-md-12 pt-2">
-                {% render_field form.description class="form-control col-md-12" %}
+            <div class="col-md-12 mb-2">
+                <label for="description" class="form-label">Descrição</label>
+                <input type="text" name="description" class="form-control" id="description" placeholder="Nome do produto">
             </div>
-            <div class="col-sm col-md-12 pt-2">
-              <div class="mb-3">
-                  <label for="is_available" class="form-label">Status do produto</label>
-                  {% render_field form.is_available  id="is_available" %}
-              </div>
-          </div>
+            <div class="col-md-12 ">
+                <div class="px-4">
+                    <input class="form-check-input" type="checkbox" name="is_available" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Produto ativo
+                    </label>
+                </div>
+            </div>
             <div class="col-sm-3 col-md-12 pt-2">
-              <div class="mb-3">
-                <label for="image" class="form-label">Imagem do produto</label>
-                {% render_field form.image_product id="image" %}
-              </div>
-          </div>
+                <div class="mb-2">
+                    <label for="formFile" class="form-label">Adicionar imagem</label>
+                    <input class="form-control" name="image_product" type="file" id="formFile" onchange="preview()">
+                </div>
+                <img id="frame" src="" class="img-fluid" width="200px" />
+            </div>
         </div>
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        <button type="submit" class="btn btn-primary">salvar</button>
+        <button type="submit" class="btn btn-primary">Adicionar</button>
     </div>
-</div>
 </form>
 
-  {% endwith %}
+
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        frame.src = "";
+    }
+</script>

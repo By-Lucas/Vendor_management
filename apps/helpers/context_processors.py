@@ -1,13 +1,13 @@
-from urllib.parse import uses_relative
 from django.conf import settings
 
 from accounts.others_models.model_profile import UserProfile
-from clinic.models.model_clinic import Clinic
+from vendor.model.vendor_models import Vendor
+from products.models.category_model import Category
 
 
-def get_clinic(request):
+def get_vendor(request):
     try:
-        clinic = Clinic.objects.get(user=request.user)
+        vendor = Vendor.objects.get(user=request.user)
     except:
         vendor = None
     return dict(vendor=vendor)
@@ -18,3 +18,10 @@ def get_user_profile(request):
     except:
         user_profile = None
     return dict(user_profile=user_profile)
+
+def get_categories(request):
+    try:
+        category = Category.objects.all()
+    except:
+        category = None
+    return dict(category=category)

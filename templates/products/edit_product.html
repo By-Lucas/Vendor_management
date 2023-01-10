@@ -26,9 +26,10 @@
                 </div>
                 <div class="col-sm-3 col-md-12 pt-2">
                     <div class="mb-3">
-                    <label for="image" class="form-label">Imagem do produto</label>
-                    {% render_field form.image_product  class="form-control col-md-12" id="image" %}
+                    <label for="formFile" class="form-label">Imagem do produto</label>
+                        {% render_field form.image_product  class="form-control col-md-12" id="formFile" onchange="preview()" %}
                     </div>
+                    <img id="frame" src="" class="img-fluid" width="200px" />
                 </div>
             </div>
         </div>
@@ -38,5 +39,16 @@
             <button type="submit" class="btn btn-primary">salvar</button>
         </div>
 </form>
+
+
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        frame.src = "";
+    }
+</script>
 
   {% endwith %}
