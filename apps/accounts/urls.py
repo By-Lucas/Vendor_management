@@ -4,13 +4,14 @@ from . import views
 
 urlpatterns = [
    path('', views.myAccount),
-    path('registerUser/', views.registerUser, name='registerUser'),
-    path('registerVendor/', views.registerVendor, name='registerVendor'),
+    path('cadastrar-usuario/', views.registerUser, name='registerUser'),
+    path('cadastrar-fornecedor/', views.registerVendor, name='registerVendor'),
 
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('myAccount/', views.myAccount, name='myAccount'),
-    path('vendorDashboard/', views.vendorDashboard, name='vendorDashboard'),
+    path('usuario/', views.user_profile, name='user_profile'),
+    path('fornecedor/', views.vendorDashboard, name='vendorDashboard'),
 
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 

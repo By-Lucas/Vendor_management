@@ -2,116 +2,120 @@
 
 {% load widget_tweaks %}
 
-<!-- header top section start -->
-         <!-- logo section start -->
-         <div class="logo_section">
-            <div class="container">
-               <div class="row">
-                  <div class="col-sm-12">
-                     <div class="logo"><a href="{% url 'home' %}"><h2 class="banner_taital">TK GLobal</h2></a></div>
-                  </div>
-               </div>
-            </div>
+<!-- logo section start -->
+<div class="logo_section">
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="logo"><a href="{% url 'home' %}"><h2 class="banner_taital">TK GLobal</h2></a></div>
          </div>
-         <!-- logo section end -->
-         <!-- header section start -->
-         <div class="header_section">
-            <div class="container">
-               <div class="containt_main">
-                  <div id="mySidenav" class="sidenav">
-                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                     <a href="{% url 'home' %}">Home</a>
-                     <a href="{% url 'registerVendor' %}">Novo Fornecedor</a>
-                     <a href="{% url 'registerUser' %}">Novo usuário</a>
-                     {% if request.user.is_authenticated %}
-                        <a href=""  hx-get="{% url 'add_category' %}" hx-target="#dialog" data-bs-toggle="modal" data-bs-target="#modal">Nova categoria</a>
-                        <a href="#"  data-bs-toggle="modal" data-bs-target="#modal-product">Novo Produto</a>
-
-                        <a href="jewellery.html">Perfil</a>
-                        <a href="{% url 'logout' %}">Sair</a>
-                     {% else %}
-                        <a href="{% url 'login' %}">Login</a>
-                     {% endif %}
-
-                  </div>
-                  <span class="toggle_icon" onclick="openNav()"><img src="{% static 'images/toggle-icon.png' %}"></span>
-                  
-                  <div class="main">
-                    <form action="" method="get" class="row"> {% csrf_token %}
-                        <!-- Another variation with a button -->
-                        <div class="col-sm-3 col-md-3">
-                           <div class="input-group">
-                              <div class="input-group-append">
-                                 {% render_field product_filter.form.category class="form-control col-md-12" %}
-                                 <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
-                                       <i class="fa fa-search"></i>
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-                       <div class="col-sm">
-                           <div class="input-group">
-                              {{ product_filter.form.product_title }}
-                              <div class="input-group-append">
-                                 <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
-                                       <i class="fa fa-search"></i>
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-                    </form>
-                  </div>
-                  <div class="header_box">
-                     <div class="lang_box ">
-                        <a href="#" title="Language" class="nav-link" data-toggle="dropdown" aria-expanded="true">
-                        <img src="{% static 'images/brasil.png' %}" alt="flag" class="mr-1" width="20px" title="portuguese Kingdom"> Português <i class="fa fa-angle-down ml-2" aria-hidden="true"></i>
-                        </a>
-                        <div class="dropdown-menu ">
-                           <a href="#" class="dropdown-item">
-                           <img src="{% static 'images/flag-uk.png' %}" class="mr-1" alt="flag">
-                           Inglês
-                           </a>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <!-- header section end -->
-         
-         <!-- banner section start -->
-         <div class="banner_section layout_padding">
-            <div class="container">
-               <div id="my_slider" class="carousel slide" data-ride="carousel">
-                  <div class="carousel-inner">
-                     <div class="carousel-item active">
-                        <div class="row">
-                           <div class="col-sm-12">
-                              <h1 class="banner_taital">Os produtos <br>mais buscados no mercado</h1>
-                              <div class="buynow_bt"><a href="#">Contatar</a></div>
-                           </div>
-                        </div>
-                     </div>
-                     
-                     <div class="carousel-item">
-                        <div class="row">
-                           <div class="col-sm-12">
-                              <h1 class="banner_taital">Fornecedores <br>com melhores preços</h1>
-                              <div class="buynow_bt"><a href="#">Contatar</a></div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
-                  <i class="fa fa-angle-left"></i>
-                  </a>
-                  <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
-                  <i class="fa fa-angle-right"></i>
-                  </a>
-               </div>
-            </div>
-         </div>
-         <!-- banner section end -->
       </div>
-      
-      <!-- banner bg main end -->
+   </div>
+</div>
+<!-- logo section end -->
+
+<!-- header section start -->
+<div class="header_section">
+   <div class="container">
+      <div class="containt_main">
+         <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'product_list' %}">Produtos</a>
+            <a href="{% url 'registerVendor' %}">Novo Fornecedor</a>
+            <a href="{% url 'registerUser' %}">Novo usuário</a>
+            {% if request.user.is_authenticated %}
+               <a href="#" data-bs-toggle="modal" data-bs-target="#modal-category">Nova categoria</a>
+               <a href="#" data-bs-toggle="modal" data-bs-target="#modal-product">Novo Produto</a>
+
+               <a href="jewellery.html">Perfil</a>
+               <a href="{% url 'logout' %}">Sair</a>
+            {% else %}
+               <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+
+         </div>
+         <span class="toggle_icon" onclick="openNav()"><img src="{% static 'images/toggle-icon.png' %}"></span>
+         
+         {% if request.path == '/menu-builder/products/' %}
+            <div class="main">
+               <form action="" method="get" class="row"> {% csrf_token %}
+                     <div class="col-sm-3 col-md-3">
+                        <div class="input-group">
+                           <div class="input-group-append">
+                              {% render_field product_filter.form.category class="form-control col-md-12" %}
+                              <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
+                                    <i class="fa fa-search"></i>
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  <div class="col-sm">
+                        <div class="input-group">
+                           {{ product_filter.form.product_title }}
+                           <div class="input-group-append">
+                              <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
+                                    <i class="fa fa-search"></i>
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+               </form>
+            </div>
+         {% endif %}
+
+         <div class="header_box">
+            <div class="lang_box ml-4">
+               <a href="#" title="Language" class="nav-link" data-toggle="dropdown" aria-expanded="true">
+               <img src="{% static 'images/brasil.png' %}" alt="flag" class="mr-1" width="20px" title="portuguese Kingdom"> Português <i class="fa fa-angle-down ml-2" aria-hidden="true"></i>
+               </a>
+               <div class="dropdown-menu ">
+                  <a href="#" class="dropdown-item">
+                  <img src="{% static 'images/flag-uk.png' %}" class="mr-1" alt="flag">
+                  Inglês
+                  </a>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- header section end -->
+         
+   <!-- banner section start -->
+   <div class="banner_section layout_padding">
+      <div class="container">
+         <div id="my_slider" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+               <div class="carousel-item active">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <h1 class="banner_taital">Os produtos <br>mais buscados no mercado</h1>
+                        <div class="buynow_bt"><a href="#">Contatar</a></div>
+                     </div>
+                  </div>
+               </div>
+               
+               <div class="carousel-item">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <h1 class="banner_taital">Fornecedores <br>com melhores preços</h1>
+                        <div class="buynow_bt"><a href="#">Contatar</a></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
+            <i class="fa fa-angle-left"></i>
+            </a>
+            <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
+            <i class="fa fa-angle-right"></i>
+            </a>
+         </div>
+      </div>
+   </div>
+   <!-- banner section end -->
+</div>
+
+
+<!-- banner bg main end -->

@@ -2,8 +2,55 @@
 
 <!-- Placeholder for the modal -->
 <div id="modal-product" class="modal fade" tabindex="-1"  aria-hidden="true">
-    <div  class="modal-dialog" >
-        {% include 'products/add_product.html' %}
+    <div class="modal-dialog">
+        <form action="{% url 'add_product' %}" method="post"  class="modal-content"> {% csrf_token %}
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar novo produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+        
+                    <div class="col-md-4">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select name="category" class="form-select" aria-label="Default select example" id="categoria">
+                            {% for cate in category %}
+                                <option value="{{cate.id}}">{{cate}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <label for="product_title" class="form-label">Produto</label>
+                        <input type="text" name="product_title" class="form-control" id="product_title" placeholder="Nome do produto">
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <label for="description" class="form-label">Descrição</label>
+                        <textarea  type="text" rows="3" name="description" class="form-control" id="description" placeholder="Descrição do produto"></textarea>
+                    </div>
+                    <div class="col-md-12 ">
+                        <div class="px-4">
+                            <input class="form-check-input" type="checkbox" name="is_available" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Produto ativo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md-12 pt-2">
+                        <div class="mb-2">
+                            <label for="image_product" class="form-label">Adicionar imagem</label>
+                            <input class="form-control" name="image_product" type="file" id="image_product" onchange="preview()">
+                        </div>
+                        <img id="frame" src="" class="img-fluid" width="200px" />
+                    </div>
+                </div>
+            </div>
+        
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </div>
+        </form>
     </div>
 </div>
   

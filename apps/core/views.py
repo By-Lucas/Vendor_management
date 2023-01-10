@@ -14,7 +14,6 @@ from helpers.filters import ProductFilter
 from helpers.decorators import vendor_level_required, customer_level_required, admin_level_required
 
 
-
 def home(request):
     template_name = 'core/home.html'
     products= Product.objects.all()
@@ -29,20 +28,3 @@ def home(request):
     }
     return render(request, template_name, context)
     
-
-# Neste modelo pode-se usar chamando o modal e atualizando a pagina após edições
-# Porém não faz o filter
-def product_list(request):
-    products = Product.objects.all()
-
-    product_filter = ProductFilter(request.GET, queryset=products)
-
-    if not product_filter.qs:
-        messages.error(request, 'Nenhum, produto encontrado')
-
-    context = {
-            'products': products,
-            'product_filter':product_filter
-        }
-    return render(request, 'products/product-list.html', context)
-

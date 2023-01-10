@@ -10,18 +10,22 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from helpers.decorators import vendor_level_required, customer_level_required, admin_level_required
+from helpers.filters import ProductFilter
 from django.template.defaultfilters import slugify
 
 
 def get_vendor(request):
     vendor = Vendor.objects.get(user=request.user)
     return vendor
+    
 
 @login_required(login_url='login')
 @admin_level_required
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
+        image = request.POST['image_product']
+        print(image)
         if form.is_valid():
             product_title = form.cleaned_data['product_title']
             product = form.save(commit=False)
@@ -51,17 +55,11 @@ def edit_product(request, pk=None):
             product = form.save(commit=False)
             product.slug = slugify(product_title)
             form.save()
-            return HttpResponse(
-                status=204,
-                headers={
-                    'HX-Trigger': json.dumps({
-                    "ProductListChanged": None,
-                    "showMessage": f"Produto {product} editado com sucesso.."
-                    })
-                }
-            )
+            messages.success(request, 'Produto atualizado com sucesso.')
+            return redirect('home')
         else:
-            print(form.errors)
+            messages.success(request, f'Obteve o seguinte erro(s): {form.errors}')
+            return redirect('home')
 
     else:
         form = ProductForm(instance=prod)
@@ -70,13 +68,27 @@ def edit_product(request, pk=None):
         'form': form,
         'prod': prod,
     }
-    return render(request, 'products/edit_product.html', context)
+    return render(request, 'products/includes/modal-edit.html', context)
+
+def product_list(request):
+    products = Product.objects.all()
+
+    product_filter = ProductFilter(request.GET, queryset=products)
+
+    if not product_filter.qs:
+        messages.error(request, 'Nenhum, produto encontrado')
+
+    context = {
+            'products': products,
+            'product_filter':product_filter
+        }
+    return render(request, 'products/product-list.html', context)
 
 @login_required(login_url='login')
 @admin_level_required
 def delete_product(request, pk=None):
     prod = get_object_or_404(Product, pk=pk)
     prod.delete()
-    messages.success(request, 'O produto excluído com sucesso!')
-    return redirect('product_by_category', prod.category.id)
+    messages.error(request, 'O produto deletado com sucesso!')
+    return redirect('home', prod.category.id)
 

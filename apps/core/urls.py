@@ -1,9 +1,7 @@
 from django.urls import path
 
-from core.views import home, product_list
+from core.views import home
 
 urlpatterns = [
     path('home', home, name='home'),
-    path('produtos', product_list, name='product_list')
-
 ]

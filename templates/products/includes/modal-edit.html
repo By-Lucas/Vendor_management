@@ -1,0 +1,60 @@
+{% load widget_tweaks %}
+
+<!-- Modal -->
+<div id="modal-edit" class="modal fade" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data"> {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% render_field form.category class="form-control" %}
+                        </div>
+                        <div class="col-sm-8">
+                            {% render_field form.product_title class="form-control" %}
+                        </div>
+                        <div class="col-sm col-md-12 pt-2">
+                            {% render_field form.description class="form-control col-md-12" %}
+                        </div>
+                        <div class="col-sm col-md-12 pt-2">
+                            <div class="mb-3">
+                                <label for="is_available" class="form-label">Status do produto</label>
+                                {% render_field form.is_available  id="is_available" %}
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-12 pt-2">
+                            <div class="mb-3">
+                            <label for="formFile" class="form-label">Imagem do produto</label>
+                                {% render_field form.image_product  class="form-control col-md-12" id="formFile" onchange="preview()" %}
+                            </div>
+                            <img id="frame" src="" class="img-fluid" width="200px" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        frame.src = "";
+    }
+</script>
+    
+
+    
+    

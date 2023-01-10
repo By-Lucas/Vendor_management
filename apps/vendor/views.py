@@ -1,8 +1,10 @@
-from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template.defaultfilters import slugify
-import json
+from django.urls import reverse_lazy, reverse
+
 from products.forms import CategoryForm, ProductForm
 from vendor.forms import VendorForm
 from accounts.forms import UserProfileForm
@@ -73,23 +75,18 @@ def productitems_by_category(request, pk=None):
 def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
+        print(form)
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
             category.slug = slugify(category_name)+'-'+str(category.id) # chicken-15
             category.save()
             messages.success(request, 'Categoria adicionada com sucesso!')
-            return HttpResponse(
-                status=204,
-                headers={
-                    'HX-Trigger': json.dumps({
-                    "ProductListChanged": None,
-                    "showMessage": f"Categoria adicionada com sucesso..."
-                    })
-                }
-            )
+            return redirect('product_list')
         else:
             print(form.errors)
+            messages.error(request, f'Obteve o seguinte erro: {form.errors}')
+            return redirect('product_list')
 
     else:
         form = CategoryForm()

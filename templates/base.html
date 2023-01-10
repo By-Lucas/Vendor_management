@@ -22,11 +22,11 @@
         
     <body>
         
-        <!--=====MODAL ADD PRODUCT=====-->
-        {% include 'products/includes/modal-add-product.html' %}
-
         <!--=====NAVBAR=====-->
         {% include 'includes/navbar.html' %}
+
+        <!--=====INCLUDE HEADER=====-->
+        {% include 'includes/header.html' %}
 
         <!--=====BLOCK BODY/MENU=====-->
         {% block body %}{% endblock body %}
@@ -37,11 +37,24 @@
         <!--=====FOOTER=====-->
         {% include 'includes/footer.html' %}
 
+        <!--=====MODALS PRODUCT=====-->
+        {% include 'products/includes/modal-add-product.html' %}
+        {% include 'products/includes/modal-delete.html' %}
+        {% include 'products/includes/modal-edit.html' %}
+        {% include 'products/includes/modal-add-category.html' %}
+
+
         <!--=====BLOCK JAVASCRIPT=====-->
         {% block js %}{% endblock js %}
 
         <!--=====INCLUDE JAVASCRIPT=====-->
         {% include 'includes/scripts-js.html' %}
-        
+
+        <script>
+            document.body.addEventListener('htmx:configRequest', (event) => {
+              event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+            });
+        </script>
+    
     </body>
 </html>

@@ -1,5 +1,5 @@
 ;(function () {
-  const toastElement = document.getElementById("toast")
+  const toastElement = document.getElementById("alert_message")
   const toastBody = document.getElementById("toast-body")
   const toast = new bootstrap.Toast(toastElement, { delay: 2000 })
   htmx.on("showMessage", (e) => {

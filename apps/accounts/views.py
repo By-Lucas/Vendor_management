@@ -9,7 +9,7 @@ import datetime
 import json
 
 from vendor.forms import VendorForm
-from accounts.forms import UserForm
+from accounts.forms import UserForm, UserProfileForm
 from accounts.models import User
 from accounts.others_models.model_profile import UserProfile
 
@@ -142,7 +142,7 @@ def activate(request, uidb64, token):
 def myAccount(request):
     user = request.user
     redirectUrl = detectUser(user)
-    return redirect('home')
+    return redirect(redirectUrl)
 
 def login(request):
     if request.user.is_authenticated:
@@ -171,17 +171,40 @@ def logout(request):
     return redirect('login')
 
 @login_required(login_url='login')
-@admin_level_required
+@vendor_level_required
 def vendorDashboard(request):
+    template_name = 'vendor/vendorDashboard.html'
     vendor = Vendor.objects.get(user=request.user)
     products = VendorProductValue.objects.filter(vendor=vendor.id, product__is_available=True)#.order_by('created_at')
     recent_products = products[:10]
-
     context = {
+        'vendor':vendor,
         'products': products,
         'recent_products': recent_products
     }
-    return render(request, 'vendor/vendorDashboard.html', context)
+    return render(request, template_name, context)
+
+@login_required(login_url='login')
+@customer_level_required
+def user_profile(request):
+    template_name = 'accounts/user-profile.html'
+    user = User.objects.get(user=request.user.id)
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES, instance=user)
+        form_profile =  UserProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil atualizado com sucesso.')
+    else:
+        form = UserForm(instance=user)
+        form_profile =  UserProfileForm(instance=user)
+    context = {
+        'user': user,
+        'form_profile': form_profile,
+        'form': form
+    }
+    return render(request, template_name, context)
+
 
 def forgot_password(request):
     if request.method == 'POST':
