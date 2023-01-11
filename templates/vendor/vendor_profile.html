@@ -6,10 +6,10 @@
 {% block body %}
 
 <div class="container rounded bg-white mt-5 mb-5">
-    <form  class="row" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <form  class="row"  method="post" enctype="multipart/form-data">{% csrf_token %}
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img class="rounded-circle mt-5" width="150px" src="{% if form_profile.profile_picture %}{{ request.user.userprofile.profile_picture.url }}{% else %}{% static 'images/not-image.gif' %}{% endif %}">
+                <img class="rounded-circle mt-5" width="150px" src="{% if form_profile.profile_picture %}{{ request.user.userprofile.profile_picture.url }}{% else %}{% static 'images/user-icon.png' %}{% endif %}">
                 <span class="font-weight-bold">{{ request.user.name }}</span><span class="text-black-50">{{ request.user.email }}</span><span> </span>
             </div>
         </div>  
@@ -31,9 +31,6 @@
                         {% render_field form_profile.phone class="form-control" %}
                     </div>
                 </div>
-                {% render_field form.id class="form-control" %}
-                {% render_field form_profile.id class="form-control" %}
-
 
                 <div class="row mt-3">
                     <div class="col-md-12">
@@ -69,11 +66,11 @@
                         {% render_field form_profile.state class="form-control" placeholder="Estado" %}
                     </div>
                     <div class="col-md-12">
-                        <label class="labels">Foto do perfil</label>
-                        {% render_field form_profile.profile_picture class="form-control" %}
+                        <label class="labels">Telefone</label>
+                        {% render_field form_profile.phone class="form-control" placeholder="Tepefone" %}
                     </div>
-                    
                 </div>
+                
             </div>
             <div class="mt-1 mb-3 text-center">
                 <button class="btn btn-primary profile-button" type="submit">Save Profile</button>

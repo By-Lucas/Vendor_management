@@ -9,7 +9,7 @@ import datetime
 import json
 
 from vendor.forms import VendorForm
-from accounts.forms import UserForm, UserProfileForm
+from accounts.forms import UserForm, UserProfileForm, UserUpdateForm
 from accounts.models import User
 from accounts.others_models.model_profile import UserProfile
 
@@ -173,13 +173,34 @@ def logout(request):
 @login_required(login_url='login')
 @vendor_level_required
 def vendorDashboard(request):
-    template_name = 'vendor/vendorDashboard.html'
-    vendor = Vendor.objects.get(user=request.user)
+    template_name = 'vendor/vendor_profile.html'
+    user = request.user
+    vendor = Vendor.objects.get(user=user)
+    
     products = VendorProductValue.objects.filter(vendor=vendor.id, product__is_available=True)#.order_by('created_at')
     recent_products = products[:10]
+    if request.method == 'POST':
+        form = UserUpdateForm(instance=user)
+        form_profile =  UserProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid() and form_profile.is_valid():
+            form.save()
+            form_profile.save()
+            messages.success(request, 'Alterações feita com sucesso')
+            return redirect('myAccount')
+
+        else:
+            print(f'Obtivemos o seguinte erro {form.errors} : {form_profile.errors}')
+            messages.error(request, f'Obtivemos o seguinte erro {form.errors} : {form_profile.errors}')
+            return redirect('myAccount')
+    else:
+        form = UserUpdateForm(instance=user)
+        form_profile =  UserProfileForm(instance=user)
+
     context = {
         'vendor':vendor,
         'products': products,
+        'form_profile': form_profile,
+        'form':form,
         'recent_products': recent_products
     }
     return render(request, template_name, context)
@@ -190,13 +211,19 @@ def user_profile(request):
     template_name = 'accounts/user-profile.html'
     user = User.objects.get(user=request.user.id)
     if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES, instance=user)
-        form_profile =  UserProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
+        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+        form_profile =  UserProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid() and form_profile.is_valid():
             form.save()
+            form_profile.save()
             messages.success(request, 'Perfil atualizado com sucesso.')
+            return redirect('user_profile')
+            
+        else:
+            messages.error(request, f'Obtivemos o seguinte erro {form.errors} : {form_profile.errors}')
+            return redirect('myAccount')
     else:
-        form = UserForm(instance=user)
+        form = UserUpdateForm(instance=user)
         form_profile =  UserProfileForm(instance=user)
     context = {
         'user': user,

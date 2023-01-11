@@ -16,8 +16,8 @@ class UserProfile(models.Model):
     user = OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     profile_picture = models.ImageField(upload_to=upload_to, blank=True, null=True)
     cover_photo = models.ImageField(upload_to=upload_to, blank=True, null=True)
-    business_name = models.CharField(verbose_name=_('Razão Social'), max_length=100, blank=True, null=True)
-    CNPJ = models.CharField(verbose_name=_('CNPJ'), max_length=18, blank=True, null=True)
+    business_name = models.CharField(verbose_name=_('Razão Social'), max_length=100, blank=True, null=True, unique=True)
+    CNPJ = models.CharField(verbose_name=_('CNPJ'), max_length=18, blank=True, null=True, unique=True)
     fantasy_name = models.CharField(verbose_name=_('Nome Fantasia'), max_length=100, blank=True, null=True)
     address = models.CharField(verbose_name=_('Endereço'), max_length=120, blank=True, null=True)
     complement_address = models.CharField(verbose_name=_('Complemento'), max_length=120, blank=True, null=True)
@@ -40,10 +40,11 @@ class UserProfile(models.Model):
 
     def get_cnpj(self):
         if self.CNPJ:
-            cpf = str(self.CNPJ)
-            cpf_parte_1 = cpf[0:3]
-            cpf_parte_2 = cpf[3:6]
-            cpf_parte_3 = cpf[6:9]
-            cpf_parte_4 = cpf[9:]
-            cpf_formatado = f"{cpf_parte_1}.{cpf_parte_2}.{cpf_parte_3}-{cpf_parte_4}"
-            return cpf_formatado
+            cnpj = str(self.CNPJ)
+            cnpj_parte_1 = cnpj[0:2]
+            cnpj_parte_2 = cnpj[2:5]
+            cnpj_parte_3 = cnpj[5:8]
+            cnpj_parte_4 = cnpj[8:12]
+            cnpj_parte_5 = cnpj[12:14]
+            cnpj_formatado = f"{cnpj_parte_1}.{cnpj_parte_2}.{cnpj_parte_3}/{cnpj_parte_4}-{cnpj_parte_5}"
+            return cnpj_formatado

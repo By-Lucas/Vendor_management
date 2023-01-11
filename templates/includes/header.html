@@ -17,7 +17,7 @@
 <!-- header section start -->
 <div class="header_section">
    <div class="container">
-      <div class="containt_main">
+      <div class="containt_main  mb-3">
          <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="{% url 'home' %}">Home</a>
@@ -28,7 +28,7 @@
                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-category">Nova categoria</a>
                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-product">Novo Produto</a>
 
-               <a href="jewellery.html">Perfil</a>
+               <a href="{% url 'myAccount' %}">Perfil</a>
                <a href="{% url 'logout' %}">Sair</a>
             {% else %}
                <a href="{% url 'login' %}">Login</a>
@@ -81,7 +81,7 @@
    </div>
 </div>
 <!-- header section end -->
-         
+   {% if request.path != '/usuario/'%}
    <!-- banner section start -->
    <div class="banner_section layout_padding">
       <div class="container">
@@ -114,6 +114,7 @@
          </div>
       </div>
    </div>
+   {% endif %}
    <!-- banner section end -->
 </div>
 

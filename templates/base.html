@@ -20,19 +20,20 @@
 
     </head>
         
-    <body>
+    <body class="banner_bg_main">
+        <div class="banner_bg_main">
+            <!--=====NAVBAR=====-->
+            {% include 'includes/navbar.html' %}
+
+            <!--=====INCLUDE JAVASCRIPT=====-->
+            {% include 'includes/alerts.html' %}
         
-        <!--=====NAVBAR=====-->
-        {% include 'includes/navbar.html' %}
-
-        <!--=====INCLUDE HEADER=====-->
-        {% include 'includes/header.html' %}
-
+            <!--=====INCLUDE HEADER=====-->
+            {% include 'includes/header.html' %}
+        </div>
         <!--=====BLOCK BODY/MENU=====-->
         {% block body %}{% endblock body %}
 
-        <!--=====INCLUDE JAVASCRIPT=====-->
-        {% include 'includes/alerts.html' %}
         
         <!--=====FOOTER=====-->
         {% include 'includes/footer.html' %}

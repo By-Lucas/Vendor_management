@@ -2,7 +2,7 @@ from django import forms
 
 from accounts.models import User
 from accounts.others_models.model_profile import UserProfile
-from helpers.commons import ADMIN_SISTEM, BASE_ACCESS_LEVEL_CHOICES
+from helpers import commons
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -12,7 +12,6 @@ class UserUpdateForm(forms.ModelForm):
             'name',
             'email',
             'username',
-            'role',
         ]
 
 
@@ -37,7 +36,20 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            'profile_picture', 'cover_photo', 'business_name',
+            'profile_picture', 'business_name',
             'CNPJ', 'fantasy_name', 'address', 'complement_address', 'district',
             'house_number', 'pin_code', 'city', 'state', 'phone', 'email_busines'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+
+        self.request = kwargs.pop('request', None)
+        user = kwargs.pop('instance')
+
+        if user.role == commons.USER_COMMOM:
+            self.fields['business_name'] = forms.CharField(widget=forms.HiddenInput())
+            self.fields['CNPJ'] = forms.CharField(widget=forms.HiddenInput())
+            self.fields['fantasy_name'] = forms.CharField(widget=forms.HiddenInput())
+            self.fields['email_busines'] = forms.CharField(widget=forms.HiddenInput())
+
