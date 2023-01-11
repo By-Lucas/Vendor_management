@@ -18,10 +18,11 @@ class UserUpdateForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     password = forms.CharField(label='Senha', widget=forms.PasswordInput())
     confirm_password = forms.CharField(label='Confirme sua senha', widget=forms.PasswordInput())
+    role = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = User
-        fields = ['name', 'username', 'email', 'password', 'confirm_password']
+        fields = ['name', 'username', 'email', 'role', 'password', 'confirm_password']
 
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
@@ -30,6 +31,7 @@ class UserForm(forms.ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError("Senha não corresponde!")
+
 
 
 class UserProfileForm(forms.ModelForm):

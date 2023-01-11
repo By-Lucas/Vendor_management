@@ -45,14 +45,8 @@ def registerUser(request):
             messages.success(request, 'Sua conta foi cadastrada com sucesso, verifique seu email para ativa-la.')
             return redirect('home')
         else:
-            return HttpResponse(
-                status=204,
-                headers={
-                    'HX-Trigger': json.dumps({
-                    "showMessage": f'Tivemos o seguinte erro ao registrar novo usuário: {form.errors}'
-                    })
-                }
-            ) 
+            messages.error(request, f'Tivemos o seguinte erro ao registrar novo usuário: {form.errors}')
+            
     else:
         form = UserForm()
     context = {
@@ -143,8 +137,7 @@ def activate(request, uidb64, token):
 
 @login_required(login_url='login')
 def myAccount(request):
-    user = request.user
-    redirectUrl = detectUser(user)
+    redirectUrl = detectUser(request)
     return redirect(redirectUrl)
 
 def login(request):
@@ -177,10 +170,10 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/user-profile.html'
     def get(self, request):
         context = {}
-        user = User.objects.filter(user=request.user.id).first()
+        user = request.user#User.objects.filter(user=request.user.id).first()
         profile = user.userprofile
-
-        if user.role == commons.VENDOR or user.is_superuser:
+        print(request.user.role)
+        if request.user.role == commons.VENDOR or request.user.is_superuser:
             context['vendor'] = Vendor.objects.get(user=user)
         
         form = UserUpdateForm(instance=user)
@@ -196,7 +189,7 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        user = User.objects.filter(user=request.user.id).first()
+        user = request.user
         profile = user.userprofile
 
         form = UserUpdateForm(request.POST, instance=user)
@@ -211,8 +204,8 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
             
             form_profile.save()
 
-            contatct_form.instance = user_f
-            contatct_form.save()
+            #contatct_form.instance = form
+            #contatct_form.save()
 
             messages.success(request, 'Perfil atualizado com sucesso.')
             return redirect('user_profile')

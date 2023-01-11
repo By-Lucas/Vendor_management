@@ -4,25 +4,32 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
+from django.contrib import messages
+
 from helpers import commons
 from django.conf import settings
 
 from helpers.commons import *
 
 
-def detectUser(user):
-    if user.role == commons.VENDOR:
+def detectUser(request):
+    print(request.user.role)
+    if request.user.role == commons.VENDOR:
         redirectUrl = 'user_profile'
         return redirectUrl
-    if user.is_superuser:
+    elif request.user.is_superuser:
         redirectUrl = '/admin'
         return redirectUrl
-    if user.role == commons.ADMIN_SISTEM:
+    elif request.user.role == commons.ADMIN_SISTEM:
         redirectUrl = 'user_profile'
         return redirectUrl
-    elif user.role == commons.USER_COMMOM:
+    elif request.user.role == commons.USER_COMMOM:
         redirectUrl = 'user_profile'
         return redirectUrl
+    #else:
+    #    redirectUrl = 'home'
+    #    messages.error(request, 'Você não tem um nivel de permissão para acessar')
+    #   return redirectUrl
 
     
 def send_verification_email(request, user, mail_subject, email_template):

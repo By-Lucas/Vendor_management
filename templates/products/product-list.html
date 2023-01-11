@@ -35,7 +35,7 @@
                                   {% endif %}
                                      <div class="btn_main">
                                      {% if request.user.is_authenticated %}
-                                        <div class="buy_bt"><a href="#">Forncedores</a></div>
+                                        <div class="buy_bt"><a href="{% url 'get_product_vendors' product.id %}">Forncedores</a></div>
                                         {% if request.user.is_superuser and request.user.role == user_suppliers_access or adm_sistem_access %}
                                               <div class="seemore_bt">
                                                  

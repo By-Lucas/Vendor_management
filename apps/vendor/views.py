@@ -133,10 +133,6 @@ def delete_category(request, pk=None):
 def get_product_vendors(request, pk=None):
     prod = get_object_or_404(Product, pk=pk)
     product_vendor = VendorProductValue.objects.filter(product=prod)
-    for x in product_vendor:
-        print(x.vendor)
-        print(x.price_product)
-
         
     context = {
         'product_vendor': product_vendor,
