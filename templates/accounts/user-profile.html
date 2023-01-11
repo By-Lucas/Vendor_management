@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
 
 {% load static %}
+
+{% load bootstrap_tags %}
 {% load widget_tweaks %}
 
-{% block body %}
 
+{% block head-js %}
+<script src="{% static 'js/jquery.mask.min.js' %}"></script>
+<script src="{% static 'js/admin.mask.js' %}"></script>
+<script src="{% static 'js/inline_form/jquery.formset.js' %}"></script>
+<script src="{% static 'js/inline_form/jquery-ui.js' %}"></script>
+{% endblock head-js %}
+
+{% block body %}
 <div class="container rounded bg-white mt-5 mb-5">
     <form  class="row" method="post" enctype="multipart/form-data">{% csrf_token %}
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img class="rounded-circle mt-5" width="150px" src="{% if form_profile.profile_picture %}{{ request.user.userprofile.profile_picture.url }}{% else %}{% static 'images/not-image.gif' %}{% endif %}">
+                <img class="rounded-circle mt-5" width="150px" src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'images/not-image.gif' %}{% endif %}">
                 <span class="font-weight-bold">{{ request.user.name }}</span><span class="text-black-50">{{ request.user.email }}</span><span> </span>
             </div>
         </div>  
@@ -18,83 +27,55 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Informações do perfil</h4>
                 </div>
-                <div class="row mt-1">
-                    <div class="col-md-12"><label class="labels">Nome completo</label>
-                        {% render_field form.name class="form-control" %}
-                    </div>
-                </div>
-                <div class="row mt-1">
-                    <div class="col-md-6"><label class="labels">Usuário</label>
-                        {% render_field form.username class="form-control" %}
-                    </div>
-                    <div class="col-md-6"><label class="labels">Telefone</label>
-                        {% render_field form_profile.phone class="form-control" %}
-                    </div>
-                </div>
-                {% render_field form.id class="form-control" %}
-                {% render_field form_profile.id class="form-control" %}
 
-
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <label class="labels">E-mail</label>
-                        {% render_field form.email class="form-control" placeholder="exemplo@gmail.com" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Endereço</label>
-                        {% render_field form_profile.address class="form-control" placeholder="Digite seu endereço" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Completemento</label>
-                        {% render_field form_profile.complement_address class="form-control" placeholder="Completemento" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Bairro</label>
-                        {% render_field form_profile.district class="form-control" placeholder="Bairro" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Nº da casa</label>
-                        {% render_field form_profile.house_number class="form-control" placeholder="Número da casa" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">CEP</label>
-                        {% render_field form_profile.pin_code class="form-control" placeholder="CEP" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Cidade</label>
-                        {% render_field form_profile.city class="form-control" placeholder="Cidade" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Estado</label>
-                        {% render_field form_profile.state class="form-control" placeholder="Estado" %}
-                    </div>
-                    <div class="col-md-12">
-                        <label class="labels">Foto do perfil</label>
-                        {% render_field form_profile.profile_picture class="form-control" %}
-                    </div>
+                <div class="row mt-0">
+                    {{form|as_bootstrap}}
+                    {{form_profile|as_bootstrap}}
                     
+                    {% render_field form.id  %}
+                    {% render_field form_profile.id  %}
+
                 </div>
-            </div>
-            <div class="mt-1 mb-3 text-center">
-                <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
             </div>
         </div>
         <div class="col-md-4">
             <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center experience"><span>Editar contato</span>
-                    <button type="button" class="btn btn-warning">
-                        <i class="fa fa-plus"></i>&nbsp;Contato
-                    </button>
+                <div class="d-flex justify-content-between align-items-center experience"><span>Editar contatos</span>
+                    <button class="btn btn-primary profile-button" type="submit">Salvar Perfil</button>
                 </div>
                 <br>
                 <div class="col-md-12">
-                    <label class="labels">Experience in Designing</label>
-                    <input type="text" class="form-control" placeholder="experience" value="">
+                    {{ contatct_form_set.id }}
+
+                    {% for formset in contatct_form_set %}
+                        <div class="row mb-3">
+                            <hr class="text-primary">
+                            <div class="ContatcForm col-sm-12">
+                                {% render_field formset.id  %}
+                                {% render_field formset.contact class="form-control mb-2"  placeholder="Número" %}
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
                 <br>
             </div>
         </div>
     </form>
 </div>
-
 {% endblock body %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function() {
+        $('.ContatcForm').formset({
+            prefix: '{{ contatct_form_set.prefix }}',
+            addText: 'Novo Contato',
+            hideLastAddForm: false,
+            deleteText: 'Remover',
+        });
+    })
+</script>
+
+<script src="{% static 'js/inline_form/jquery.formset.js' %}"></script>
+
+{% endblock js %}

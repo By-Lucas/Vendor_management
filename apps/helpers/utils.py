@@ -12,13 +12,13 @@ from helpers.commons import *
 
 def detectUser(user):
     if user.role == commons.VENDOR:
-        redirectUrl = 'vendorDashboard'
+        redirectUrl = 'user_profile'
         return redirectUrl
     if user.is_superuser:
         redirectUrl = '/admin'
         return redirectUrl
     if user.role == commons.ADMIN_SISTEM:
-        redirectUrl = 'vendorDashboard'
+        redirectUrl = 'user_profile'
         return redirectUrl
     elif user.role == commons.USER_COMMOM:
         redirectUrl = 'user_profile'

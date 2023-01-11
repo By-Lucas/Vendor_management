@@ -48,3 +48,15 @@ class UserProfile(models.Model):
             cnpj_parte_5 = cnpj[12:14]
             cnpj_formatado = f"{cnpj_parte_1}.{cnpj_parte_2}.{cnpj_parte_3}/{cnpj_parte_4}-{cnpj_parte_5}"
             return cnpj_formatado
+
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    contact = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.email
+    
+    class Meta:
+        verbose_name = _('Contato')
+        verbose_name_plural = _('Contatos')

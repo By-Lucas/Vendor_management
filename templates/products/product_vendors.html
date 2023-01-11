@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+
+<style>
+    .electronic_img{
+       max-height: 200px;
+       max-width: 300px;
+    }
+    .btn_main{
+       margin-top: -150px;
+    }
+ </style>
+ 
+ <!-- Home section start -->
+ <div class="fashion_section pt-3" style="background-color: white;">
+    <div id="electronic_main_slider" class="carousel slide" data-ride="carousel">
+       <div class="carousel-inner">
+          <div class="carousel-item active">
+             <div class="container">
+                <h1 class="fashion_taital">Produto: {{prod}}</h1>
+                <div id="fashion_section_2" class="fashion_section_2">
+                   <div class="row">
+
+                      <table class="table table-bordered border-warning">
+                        <thead>
+                          <tr>
+                            <th class="border-warning" scope="col">id</th>
+                            <th class="border-warning" scope="col">Produto</th>
+                            <th class="border-warning" scope="col">Valor</th>
+                            <th class="border-warning" scope="col">Fornecedor</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for products in product_vendor %}
+                            <tr >
+                                <th>{{products.id}}</th>
+                                <td>{{products.product}}</td>
+                                <td>R${{products.price_product}}</td>
+                                <td><a href="">{{products.vendor}}</a></td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                        
+                      </table>
+                 
+                   </div>
+                </div>
+             </div>
+          </div>
+          </div>
+       </div>
+    </div>
+  <!-- Home section end -->
+ 
+{% endblock body %}

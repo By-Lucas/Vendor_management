@@ -5,13 +5,16 @@ from django.template.defaultfilters import slugify
 from django.utils.http import urlsafe_base64_decode
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required, user_passes_test
-import datetime
+from django.views.generic import TemplateView
+from django.forms import inlineformset_factory
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 import json
 
 from vendor.forms import VendorForm
-from accounts.forms import UserForm, UserProfileForm, UserUpdateForm
+from accounts.forms import UserForm, UserProfileForm, UserUpdateForm, ContactForm
 from accounts.models import User
-from accounts.others_models.model_profile import UserProfile
+from accounts.others_models.model_profile import UserProfile, Contact
 
 from helpers.decorators import vendor_level_required, customer_level_required, admin_level_required
 from helpers.utils import detectUser, send_verification_email
@@ -170,67 +173,58 @@ def logout(request):
     messages.error(request, 'Você está desconectado.')
     return redirect('login')
 
-@login_required(login_url='login')
-@vendor_level_required
-def vendorDashboard(request):
-    template_name = 'vendor/vendor_profile.html'
-    user = request.user
-    vendor = Vendor.objects.get(user=user)
-    
-    products = VendorProductValue.objects.filter(vendor=vendor.id, product__is_available=True)#.order_by('created_at')
-    recent_products = products[:10]
-    if request.method == 'POST':
-        form = UserUpdateForm(instance=user)
-        form_profile =  UserProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid() and form_profile.is_valid():
-            form.save()
-            form_profile.save()
-            messages.success(request, 'Alterações feita com sucesso')
-            return redirect('myAccount')
-
-        else:
-            print(f'Obtivemos o seguinte erro {form.errors} : {form_profile.errors}')
-            messages.error(request, f'Obtivemos o seguinte erro {form.errors} : {form_profile.errors}')
-            return redirect('myAccount')
-    else:
-        form = UserUpdateForm(instance=user)
-        form_profile =  UserProfileForm(instance=user)
-
-    context = {
-        'vendor':vendor,
-        'products': products,
-        'form_profile': form_profile,
-        'form':form,
-        'recent_products': recent_products
-    }
-    return render(request, template_name, context)
-
-@login_required(login_url='login')
-@customer_level_required
-def user_profile(request):
+class ProfileUpdateView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/user-profile.html'
-    user = User.objects.get(user=request.user.id)
-    if request.method == 'POST':
-        form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
-        form_profile =  UserProfileForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid() and form_profile.is_valid():
-            form.save()
+    def get(self, request):
+        context = {}
+        user = User.objects.filter(user=request.user.id).first()
+        profile = user.userprofile
+
+        if user.role == commons.VENDOR or user.is_superuser:
+            context['vendor'] = Vendor.objects.get(user=user)
+        
+        form = UserUpdateForm(instance=user)
+        form_profile = UserProfileForm(instance=profile)
+        contatct_formeset = inlineformset_factory(User, Contact, form=ContactForm, extra=1)
+        contatct_form = contatct_formeset(instance=user)
+
+        context['user']= user
+        context['form_profile']= form_profile
+        context['form']= form
+        context['contatct_form_set']= contatct_form
+
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        user = User.objects.filter(user=request.user.id).first()
+        profile = user.userprofile
+
+        form = UserUpdateForm(request.POST, instance=user)
+        form_profile = UserProfileForm(request.POST or None, request.FILES, instance=profile)
+        contatct_formeset = inlineformset_factory(User, Contact, form=ContactForm, extra=1)
+        contatct_form = contatct_formeset(request.POST, instance=user)
+        print(contatct_form)
+        
+        if form.is_valid() and form_profile.is_valid(): # and contatct_form.is_valid()
+            user_f = form.save(commit=False)
+            user_f.save()
+            
             form_profile.save()
+
+            contatct_form.instance = user_f
+            contatct_form.save()
+
             messages.success(request, 'Perfil atualizado com sucesso.')
             return redirect('user_profile')
-            
         else:
-            messages.error(request, f'Obtivemos o seguinte erro {form.errors} : {form_profile.errors}')
-            return redirect('myAccount')
-    else:
-        form = UserUpdateForm(instance=user)
-        form_profile =  UserProfileForm(instance=user)
-    context = {
-        'user': user,
-        'form_profile': form_profile,
-        'form': form
-    }
-    return render(request, template_name, context)
+            print(form.errors, form_profile.errors)
+        context = {
+            'user': user,
+            'form_profile': form_profile,
+            'form': form,
+            'contatct_form_set':contatct_form
+        }
+        return self.render_to_response(context)
 
 
 def forgot_password(request):

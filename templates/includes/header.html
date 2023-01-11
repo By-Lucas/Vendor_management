@@ -27,7 +27,6 @@
             {% if request.user.is_authenticated %}
                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-category">Nova categoria</a>
                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-product">Novo Produto</a>
-
                <a href="{% url 'myAccount' %}">Perfil</a>
                <a href="{% url 'logout' %}">Sair</a>
             {% else %}
@@ -81,7 +80,7 @@
    </div>
 </div>
 <!-- header section end -->
-   {% if request.path != '/usuario/'%}
+   {% if request.path != '/perfil/'%}
    <!-- banner section start -->
    <div class="banner_section layout_padding">
       <div class="container">

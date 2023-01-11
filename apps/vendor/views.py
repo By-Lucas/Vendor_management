@@ -13,6 +13,7 @@ from accounts.others_models.model_profile import UserProfile
 from products.models.category_model import Category
 from products.models.product_model import Product
 from vendor.model.vendor_models import Vendor
+from vendor.model.product_value_model import VendorProductValue
 
 from helpers.decorators import vendor_level_required, customer_level_required, admin_level_required
 
@@ -127,3 +128,18 @@ def delete_category(request, pk=None):
     category.delete()
     messages.success(request, 'A categoria foi excluída com sucesso!')
     return redirect('menu_builder')
+
+@login_required(login_url='login')
+def get_product_vendors(request, pk=None):
+    prod = get_object_or_404(Product, pk=pk)
+    product_vendor = VendorProductValue.objects.filter(product=prod)
+    for x in product_vendor:
+        print(x.vendor)
+        print(x.price_product)
+
+        
+    context = {
+        'product_vendor': product_vendor,
+        'prod': prod,
+    }
+    return render(request, 'products/product_vendors.html', context)

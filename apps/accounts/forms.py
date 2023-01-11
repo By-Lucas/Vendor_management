@@ -1,7 +1,7 @@
 from django import forms
 
 from accounts.models import User
-from accounts.others_models.model_profile import UserProfile
+from accounts.others_models.model_profile import UserProfile, Contact
 from helpers import commons
 
 
@@ -47,9 +47,18 @@ class UserProfileForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         user = kwargs.pop('instance')
 
-        if user.role == commons.USER_COMMOM:
-            self.fields['business_name'] = forms.CharField(widget=forms.HiddenInput())
-            self.fields['CNPJ'] = forms.CharField(widget=forms.HiddenInput())
-            self.fields['fantasy_name'] = forms.CharField(widget=forms.HiddenInput())
-            self.fields['email_busines'] = forms.CharField(widget=forms.HiddenInput())
+        try:
+        
+            if user.role == commons.USER_COMMOM:
+                self.fields['business_name'] = forms.CharField(widget=forms.HiddenInput())
+                self.fields['CNPJ'] = forms.CharField(widget=forms.HiddenInput())
+                self.fields['fantasy_name'] = forms.CharField(widget=forms.HiddenInput())
+                self.fields['email_busines'] = forms.CharField(widget=forms.HiddenInput())
+        except AttributeError:
+            pass
 
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        modal = Contact
+        fields = ['contact']

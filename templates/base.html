@@ -3,17 +3,19 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-
-    {% block head %}{% endblock head %}
-    {% include 'includes/scripts-head.html' %}
-
     <!-- basic -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- mobile metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    {% include 'includes/scripts-head.html' %}
+    {% block head %}{% endblock head %}
+    {% block head-js %}{% endblock head-js %}
+    
 
     
     <title>Imobi {% block title %}{% endblock title %}</title>
@@ -44,12 +46,11 @@
         {% include 'products/includes/modal-edit.html' %}
         {% include 'products/includes/modal-add-category.html' %}
 
+        <!--=====INCLUDE JAVASCRIPT=====-->
+        {% include 'includes/scripts-js.html' %}
 
         <!--=====BLOCK JAVASCRIPT=====-->
         {% block js %}{% endblock js %}
-
-        <!--=====INCLUDE JAVASCRIPT=====-->
-        {% include 'includes/scripts-js.html' %}
 
         <script>
             document.body.addEventListener('htmx:configRequest', (event) => {

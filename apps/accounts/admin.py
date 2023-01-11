@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from accounts.models import User
-from accounts.others_models.model_profile import UserProfile
+from accounts.others_models.model_profile import UserProfile, Contact
 
 class CustomUserAdmin(UserAdmin):
     list_display = ['name', 'email', 'is_superuser', 'is_staff', 'role']
@@ -21,3 +21,4 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(UserProfile)
+admin.site.register(Contact)
