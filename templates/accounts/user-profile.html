@@ -3,15 +3,11 @@
 {% load static %}
 
 {% load bootstrap_tags %}
-{% load widget_tweaks %}
 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/profile/buttons.css' %}">
+{% endblock head %}
 
-{% block head-js %}
-<script src="{% static 'js/jquery.mask.min.js' %}"></script>
-<script src="{% static 'js/admin.mask.js' %}"></script>
-<script src="{% static 'js/inline_form/jquery.formset.js' %}"></script>
-<script src="{% static 'js/inline_form/jquery-ui.js' %}"></script>
-{% endblock head-js %}
 
 {% block body %}
 <div class="container rounded bg-white mt-5 mb-5">
@@ -27,14 +23,13 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Informações do perfil</h4>
                 </div>
-
                 <div class="row mt-0">
+
+                    {{ contatct_form_set.management_form }}
+                    
                     {{form|as_bootstrap}}
                     {{form_profile|as_bootstrap}}
                     
-                    {% render_field form.id  %}
-                    {% render_field form_profile.id  %}
-
                 </div>
             </div>
         </div>
@@ -45,14 +40,12 @@
                 </div>
                 <br>
                 <div class="col-md-12">
-                    {{ contatct_form_set.id }}
 
                     {% for formset in contatct_form_set %}
-                        <div class="row mb-3">
-                            <hr class="text-primary">
-                            <div class="ContatcForm col-sm-12">
-                                {% render_field formset.id  %}
-                                {% render_field formset.contact class="form-control mb-2"  placeholder="Número" %}
+                        <div class="row ">
+                            <div class="ContatcForm col-sm-12 mb-0">
+                                <hr class="text-warning">
+                                {{formset|as_bootstrap}}
                             </div>
                         </div>
                     {% endfor %}
@@ -62,16 +55,19 @@
         </div>
     </form>
 </div>
+
+
 {% endblock body %}
 
 {% block js %}
+
 <script type="text/javascript">
     $(function() {
         $('.ContatcForm').formset({
             prefix: '{{ contatct_form_set.prefix }}',
-            addText: 'Novo Contato',
-            hideLastAddForm: false,
-            deleteText: 'Remover',
+            addText: '+',
+            hideLastAddForm: true,
+            deleteText: 'X',
         });
     })
 </script>

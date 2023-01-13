@@ -172,7 +172,7 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
         context = {}
         user = request.user#User.objects.filter(user=request.user.id).first()
         profile = user.userprofile
-        print(request.user.role)
+        
         if request.user.role == commons.VENDOR or request.user.is_superuser:
             context['vendor'] = Vendor.objects.get(user=user)
         
@@ -196,16 +196,15 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
         form_profile = UserProfileForm(request.POST or None, request.FILES, instance=profile)
         contatct_formeset = inlineformset_factory(User, Contact, form=ContactForm, extra=1)
         contatct_form = contatct_formeset(request.POST, instance=user)
-        print(contatct_form)
         
-        if form.is_valid() and form_profile.is_valid(): # and contatct_form.is_valid()
+        if form.is_valid() and form_profile.is_valid() and contatct_form.is_valid():
             user_f = form.save(commit=False)
             user_f.save()
             
             form_profile.save()
 
-            #contatct_form.instance = form
-            #contatct_form.save()
+            contatct_form.instance = user_f
+            contatct_form.save()
 
             messages.success(request, 'Perfil atualizado com sucesso.')
             return redirect('user_profile')

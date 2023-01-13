@@ -5,15 +5,14 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.contrib import messages
-
-from helpers import commons
 from django.conf import settings
 
+from accounts.models import User
+from helpers import commons
 from helpers.commons import *
 
 
 def detectUser(request):
-    print(request.user.role)
     if request.user.role == commons.VENDOR:
         redirectUrl = 'user_profile'
         return redirectUrl
@@ -26,11 +25,19 @@ def detectUser(request):
     elif request.user.role == commons.USER_COMMOM:
         redirectUrl = 'user_profile'
         return redirectUrl
-    #else:
-    #    redirectUrl = 'home'
-    #    messages.error(request, 'Você não tem um nivel de permissão para acessar')
-    #   return redirectUrl
+    elif request.user.role is None:
 
+        user = User.objects.get(email__exact=request.user.email)
+        mail_subject = 'Informação de login'
+        email_template = 'accounts/emails/alert_information.html'
+        send_verification_email(request, user, mail_subject, email_template)
+
+        request.user.role = commons.USER_COMMOM
+        request.user.save()
+        redirectUrl = 'user_profile'
+        messages.warning(request, 'Você não contem permissões para acessar, iremos adiciona-lo como usuário.\nPara demais informaçopes fale com administrador do sistema')
+        return redirectUrl
+ 
     
 def send_verification_email(request, user, mail_subject, email_template):
     from_email = settings.DEFAULT_FROM_EMAIL

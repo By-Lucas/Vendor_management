@@ -33,7 +33,6 @@ class UserForm(forms.ModelForm):
             raise forms.ValidationError("Senha não corresponde!")
 
 
-
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -61,6 +60,7 @@ class UserProfileForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
+    contact = forms.CharField(label='Contatos', required=False,  widget=forms.TextInput(attrs={'class': 'form-control '}))
     class Meta:
         modal = Contact
-        fields = ['contact']
+        fields = '__all__'
