@@ -177,7 +177,7 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
             context['vendor'] = Vendor.objects.get(user=user)
         
         form = UserUpdateForm(instance=user)
-        form_profile = UserProfileForm(instance=profile)
+        form_profile = UserProfileForm(instance=profile, user=user)
         contatct_formeset = inlineformset_factory(User, Contact, form=ContactForm, extra=1)
         contatct_form = contatct_formeset(instance=user)
 
@@ -193,7 +193,7 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
         profile = user.userprofile
 
         form = UserUpdateForm(request.POST, instance=user)
-        form_profile = UserProfileForm(request.POST or None, request.FILES, instance=profile)
+        form_profile = UserProfileForm(request.POST or None, request.FILES, instance=profile, user=user)
         contatct_formeset = inlineformset_factory(User, Contact, form=ContactForm, extra=1)
         contatct_form = contatct_formeset(request.POST, instance=user)
         

@@ -1,11 +1,14 @@
 from django import forms
-
 from accounts.models import User
 from accounts.others_models.model_profile import UserProfile, Contact
 from helpers import commons
 
 
 class UserUpdateForm(forms.ModelForm):
+    name = forms.CharField(label='Nome completo', required=False,  widget=forms.TextInput(attrs={'class': 'form-control mb-0'}))
+    email = forms.EmailField(label='E-mail', required=False,  widget=forms.TextInput(attrs={'class': 'form-control mb-0'}))
+    username = forms.CharField(label='Usuário', required=False,  widget=forms.TextInput(attrs={'class': 'form-control mb-0'}))
+
     class Meta:
         model = User
         fields = [
@@ -39,28 +42,26 @@ class UserProfileForm(forms.ModelForm):
         fields = [
             'profile_picture', 'business_name',
             'CNPJ', 'fantasy_name', 'address', 'complement_address', 'district',
-            'house_number', 'pin_code', 'city', 'state', 'phone', 'email_busines'
+            'house_number', 'pin_code', 'city', 'state', 'email_busines'
         ]
 
     def __init__(self, *args, **kwargs):
-        super(UserProfileForm, self).__init__(*args, **kwargs)
-
         self.request = kwargs.pop('request', None)
-        user = kwargs.pop('instance')
+        user = kwargs.pop('user')
 
+        super(UserProfileForm, self).__init__(*args, **kwargs)
         try:
-        
             if user.role == commons.USER_COMMOM:
-                self.fields['business_name'] = forms.CharField(widget=forms.HiddenInput())
-                self.fields['CNPJ'] = forms.CharField(widget=forms.HiddenInput())
-                self.fields['fantasy_name'] = forms.CharField(widget=forms.HiddenInput())
-                self.fields['email_busines'] = forms.CharField(widget=forms.HiddenInput())
+                self.fields['business_name'] = forms.CharField(widget=forms.HiddenInput(), required=False)
+                self.fields['CNPJ'] = forms.CharField(widget=forms.HiddenInput(), required=False)
+                self.fields['fantasy_name'] = forms.CharField(widget=forms.HiddenInput(), required=False)
+                self.fields['email_busines'] = forms.CharField(widget=forms.HiddenInput(), required=False)
         except AttributeError:
             pass
 
 
 class ContactForm(forms.ModelForm):
-    contact = forms.CharField(label='Contatos', required=False,  widget=forms.TextInput(attrs={'class': 'form-control '}))
+    contact = forms.CharField(label='Contatos', required=False,  widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         modal = Contact
         fields = '__all__'

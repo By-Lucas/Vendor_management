@@ -14,8 +14,8 @@ def upload_to(instance, filename):
 
 class UserProfile(models.Model):
     user = OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to=upload_to, blank=True, null=True)
-    cover_photo = models.ImageField(upload_to=upload_to, blank=True, null=True)
+    profile_picture = models.ImageField(verbose_name=_('Imagem do perfil'),upload_to=upload_to, blank=True, null=True)
+    cover_photo = models.ImageField(verbose_name=_('Imagem de capa'), upload_to=upload_to, blank=True, null=True)
     business_name = models.CharField(verbose_name=_('Razão Social'), max_length=100, blank=True, null=True, unique=True)
     CNPJ = models.CharField(verbose_name=_('CNPJ'), max_length=18, blank=True, null=True, unique=True)
     fantasy_name = models.CharField(verbose_name=_('Nome Fantasia'), max_length=100, blank=True, null=True)
@@ -26,7 +26,6 @@ class UserProfile(models.Model):
     pin_code = models.CharField(verbose_name=_('CEP'), max_length=20, blank=True, null=True, help_text='Exemplo: 64800-000')
     city = models.CharField(verbose_name=_('Cidade'), max_length=50, blank=True, null=True)
     state = models.CharField(verbose_name=_('Estado'), max_length=50, choices=STATE_CHOICES, blank=True, null=True)
-    phone = models.CharField(verbose_name=_('Telefone'), max_length=120, blank=True, null=True)
     email_busines = models.CharField(verbose_name=_('E-mail'), max_length=120, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
