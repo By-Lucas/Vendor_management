@@ -1,6 +1,11 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework import routers
+from decouple import config
 
+from .views import views
+from accounts.api.viewsets import UserViewSet, UserListViewSet, ProfileUserViewSet
+
+version_api = 'api/v1/'
 
 urlpatterns = [
    path('', views.myAccount),
@@ -17,5 +22,13 @@ urlpatterns = [
     path('forgot_password/', views.forgot_password, name='forgot_password'),
     path('reset_password_validate/<uidb64>/<token>/', views.reset_password_validate, name='reset_password_validate'),
     path('reset_password/', views.reset_password, name='reset_password'),
-
 ]
+
+
+router = routers.DefaultRouter()
+router.register(r'user', UserViewSet, basename='accounts')
+router.register(r'users', UserListViewSet, basename='users')
+router.register(r'profile', ProfileUserViewSet, basename='profile')
+
+# ROUTERS API
+urlpatterns += [path(version_api, include(router.urls))]

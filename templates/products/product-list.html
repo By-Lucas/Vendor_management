@@ -4,11 +4,9 @@
 
 {% block body %}
 
-
 <style>
     .electronic_img{
-       max-height: 200px;
-       max-width: 300px;
+       max-height: 300px;
     }
     .btn_main{
        margin-top: -150px;
@@ -29,22 +27,28 @@
                             <div  class="box_main">
                                   <h4 class="shirt_text">{{ product.product_title }}</h4>
                                   {% if product.image_product %}
-                                     <div class="electronic_img"><img src="{{ product.image_product.url }}"></div>
+                                    <div class="electronic_img">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#modal-product-{{product.id}}">
+                                          <img src="{{ product.image_product.url }}">
+                                       </a>
+                                    </div>
                                   {% else %}
-                                     <div class="electronic_img"><img src="{% static 'images/not-image.gif' %}"></div>
+                                    <div class="electronic_img">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#modal-product-{{product.id}}">
+                                          <img src="{% static 'images/not-image.gif' %}">
+                                       </a>
+                                    </div>
                                   {% endif %}
                                      <div class="btn_main">
                                      {% if request.user.is_authenticated %}
                                         <div class="buy_bt"><a href="{% url 'get_product_vendors' product.id %}">Forncedores</a></div>
                                         {% if request.user.is_superuser and request.user.role == user_suppliers_access or adm_sistem_access %}
                                               <div class="seemore_bt">
-                                                 
                                                  <buttom hx-get="{% url 'delete_product' product.pk %}" class="btn btn-danger btn-sm"
                                                   data-bs-toggle="modal" data-bs-target="#modal-delete">Deletar</buttom>
  
                                                  <buttom class="btn btn-primary btn-sm" hx-get="{% url 'edit_product' product.pk %}" 
                                                   data-bs-toggle="modal" data-bs-target="#modal-edit">Editar</buttom>
- 
                                               </div>
                                         {% endif %}
                                      {% else %}
@@ -63,5 +67,53 @@
        </div>
     </div>
   <!-- Home section end -->
+
+  <!--====MODAL VIEW PRODUCT===-->
+{% for product in product_filter.qs %}
+   <div class="modal fade" id="modal-product-{{product.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Produto: <strong class="text-warning">{{product.product_title}}</strong></h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'add_price_product' product.id %}" method="post" enctype="multipart/form-data">{% csrf_token %} 
+               <div class="modal-body">
+                  <div class="container"> 
+                     <div class="box_main mb-0">
+                        <div class="col-sm-12">
+                           {% if product.image_product %}
+                                 <div class="electronic_img" center>
+                                    <img src="{{ product.image_product.url }}" class="mb-0">
+                                 </div>
+                           {% else %}
+                              <div class="electronic_img mb-0">
+                                 <img src="{% static 'images/not-image.gif' %}">
+                              </div>
+                           {% endif %}
+                        </div>
+                        <div class="col-sm-12">
+                           {{product.description}}
+                        </div>
+                     </div>
+
+                     <div class="col-sm-12">
+                        <input type="hidden" name="product" class="form-control" value="{{product.id}}">
+                        <input type="hidden" name="vendor" class="form-control" value="{{request.user}}">
+                        <label for="value">Valor R$</label>
+                        <input type="text" name="price_product" class="form-control" id="value">
+                     </div>
+                  </div>
+                  
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  <button type="submit" class="btn btn-primary">Adicionar valor</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+{% endfor %}
  
 {% endblock body %}

@@ -1,5 +1,7 @@
 from django import forms
 from vendor.model.vendor_models import Vendor
+from vendor.model.product_value_model import VendorProductValue
+
 
 
 class VendorForm(forms.ModelForm):
@@ -7,3 +9,8 @@ class VendorForm(forms.ModelForm):
     class Meta:
         model = Vendor
         fields = ['vendor_name']
+
+class VendorProductValueForm(forms.ModelForm):
+    class Meta:
+        model = VendorProductValue
+        fields = ['vendor', 'product', 'price_product']

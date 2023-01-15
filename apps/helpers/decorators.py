@@ -10,16 +10,16 @@ from vendor.model.vendor_models import Vendor
 
 def admin_level_required(view_func):
     def _decorator(request, *args, **kwargs):
-
+        if request.user.is_superuser :
+            response = view_func(request, *args, **kwargs)
+            return response
         try:
-            user_clinic_permission = Vendor.objects.get(user=request.user)
+            user_clinic_permission = Vendor.objects.get(user=request.user, user__is_active=True)
 
-        except Vendor.DoesNotExist:
-            user_clinic_permission = Vendor.objects.get(user=request.user)
-            user_clinic_permission.user.is_active =  True
-            user_clinic_permission.save()
-
-        if user_clinic_permission.user.role == commons.ADMIN_SISTEM or user_clinic_permission.user.is_superuser:
+        except Vendor.MultipleObjectsReturned or Vendor.DoesNotExist:
+            user_clinic_permission = Vendor.objects.filter(user=request.user, user__is_active=True).first()
+            
+        if user_clinic_permission.user.role == commons.ADMIN_SISTEM:
             response = view_func(request, *args, **kwargs)
             return response
         else:
@@ -31,15 +31,16 @@ def admin_level_required(view_func):
 
 def vendor_level_required(view_func):
     def _decorator(request, *args, **kwargs):
+        if request.user.is_superuser :
+            response = view_func(request, *args, **kwargs)
+            return response
         try:
-            user_clinic_permission = Vendor.objects.get(user=request.user)
+            user_clinic_permission = Vendor.objects.get(user=request.user, user__is_active=True)
 
-        except Vendor.DoesNotExist:
-            user_clinic_permission = Vendor.objects.get(user=request.user)
-            user_clinic_permission.user.is_active =  True
-            user_clinic_permission.save()
+        except Vendor.MultipleObjectsReturned or Vendor.DoesNotExist:
+            user_clinic_permission = Vendor.objects.filter(user=request.user, user__is_active=True).first()
 
-        if user_clinic_permission.user.role == commons.VENDOR:
+        if user_clinic_permission.user.role == commons.VENDOR or user_clinic_permission.user.role == commons.ADMIN_SISTEM:
             response = view_func(request, *args, **kwargs)
             return response
         else:
@@ -51,13 +52,17 @@ def vendor_level_required(view_func):
 
 def customer_level_required(view_func):
     def _decorator(request, *args, **kwargs):
+        if request.user.is_superuser :
+            response = view_func(request, *args, **kwargs)
+            return response
+
         try:
-            user_clinic_permission = Vendor.objects.get(user=request.user)
-        except Vendor.DoesNotExist:
-            user_clinic_permission = Vendor.objects.get(user=request.user)
+            user_clinic_permission = Vendor.objects.get(user=request.user, user__is_active=True)
 
-        if user_clinic_permission.user.role == commons.ADMIN_SISTEM or user_clinic_permission.user.role == commons.USER_COMMOM or user_clinic_permission.user.is_superuser:
+        except Vendor.MultipleObjectsReturned or Vendor.DoesNotExist:
+            user_clinic_permission = Vendor.objects.filter(user=request.user, user__is_active=True).first()
 
+        if user_clinic_permission.user.role == commons.ADMIN_SISTEM or request.user.role == commons.USER_COMMOM:
             response = view_func(request, *args, **kwargs)
             return response
         else:

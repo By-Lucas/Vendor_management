@@ -76,7 +76,7 @@ def product_list(request):
     product_filter = ProductFilter(request.GET, queryset=products)
 
     if not product_filter.qs:
-        messages.error(request, 'Nenhum, produto encontrado')
+        messages.error(request, 'Nenhum produto encontrado')
 
     context = {
             'products': products,

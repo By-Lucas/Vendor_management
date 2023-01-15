@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponseRedirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -6,10 +6,11 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy, reverse
 
 from products.forms import CategoryForm, ProductForm
-from vendor.forms import VendorForm
+from vendor.forms import VendorForm, VendorProductValueForm
 from accounts.forms import UserProfileForm
 
 from accounts.others_models.model_profile import UserProfile
+from accounts.models import User
 from products.models.category_model import Category
 from products.models.product_model import Product
 from vendor.model.vendor_models import Vendor
@@ -72,6 +73,33 @@ def productitems_by_category(request, pk=None):
     return render(request, 'vendor/productitems_by_category.html', context)
 
 @login_required(login_url='login')
+def add_price_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    vendor = Vendor.objects.get(user=request.user.id)
+    my_price = VendorProductValue.objects.filter(vendor=vendor.id, product=pk).first()
+
+    if my_price:
+        messages.warning(request, 'Você já adicionou preço a este produto')
+        return redirect('product_list')
+
+    if request.method == 'POST':
+        form = VendorProductValueForm(request.POST, instance=vendor)
+       
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.instance.vendor = vendor
+            product.instance.product = product
+            product.save()
+            messages.success(request, 'Preço adicionado ao produto')
+            return redirect('product_list')
+
+        else:
+            print(form.errors)
+            messages.error(request, f'Obteve o seguinte erro {form.errors}')
+            return redirect('product_list')
+
+
+@login_required(login_url='login')
 @admin_level_required
 def add_category(request):
     if request.method == 'POST':
@@ -95,6 +123,7 @@ def add_category(request):
         'form': form,
     }
     return render(request, 'vendor/add_category.html', context)
+
 
 @login_required(login_url='login')
 @admin_level_required
@@ -121,6 +150,7 @@ def edit_category(request, pk=None):
     }
     return render(request, 'vendor/edit_category.html', context)
 
+
 @login_required(login_url='login')
 @admin_level_required
 def delete_category(request, pk=None):
@@ -128,6 +158,7 @@ def delete_category(request, pk=None):
     category.delete()
     messages.success(request, 'A categoria foi excluída com sucesso!')
     return redirect('menu_builder')
+
 
 @login_required(login_url='login')
 def get_product_vendors(request, pk=None):

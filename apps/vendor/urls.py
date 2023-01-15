@@ -16,5 +16,7 @@ urlpatterns = [
 
     # Products Vendors
     path('menu-builder/vendors/products/<int:pk>', views.get_product_vendors, name='get_product_vendors'),
+    path('menu-builder/vendors/add-price-product/<int:pk>', views.add_price_product, name='add_price_product'),
+
 
 ]
