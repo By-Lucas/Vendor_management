@@ -4,17 +4,10 @@ from accounts.others_models.model_profile import UserProfile
 from accounts.models import User
 
 
-class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = [
-            'profile_picture', 'business_name',
-            'CNPJ', 'fantasy_name', 'address', 'complement_address', 'district',
-            'house_number', 'pin_code', 'city', 'state', 'email_busines'
-        ]
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-
+    
     password = serializers.CharField(
         style={'input_type': 'password'},
         write_only=True,
@@ -59,3 +52,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         return count
 
 
+class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = UserProfile
+        fields = [
+            'user', 'profile_picture', 'business_name',
+            'CNPJ', 'fantasy_name', 'address', 'complement_address', 'district',
+            'house_number', 'pin_code', 'city', 'state', 'email_busines'
+        ]

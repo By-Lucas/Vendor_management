@@ -18,20 +18,29 @@ urlpatterns = [
     path('', include('core.urls')),
 ] 
 
-router = routers.DefaultRouter()
+class GestaoDeFornecedores(routers.APIRootView):
+    """
+    Api para gerenciar fornecedores, e listar os melhores preços
+    """
+    pass
 
-router.register(r'user', UserViewSet, basename='accounts')
-router.register(r'users', UserListViewSet, basename='users')
-router.register(r'profile', ProfileUserViewSet, basename='profile')
-router.register(r'products', ProductViewSet, basename='products')
-router.register(r'category', CategoryListViewSet, basename='category')
-router.register(r'vendor', VendorViewSet, basename='vendor')
-router.register(r'vendor-product-value', VendorValueViewSet, basename='vendor_product_value')
+class DocumentedRouter(routers.DefaultRouter):
+    APIRootView = GestaoDeFornecedores
+
+router = DocumentedRouter()
+
+router.register(r'user', UserViewSet, basename='Usuário')
+router.register(r'users', UserListViewSet, basename='Usuários')
+router.register(r'user-profile', ProfileUserViewSet, basename='Perfil do usuário')
+router.register(r'products', ProductViewSet, basename='Produtos')
+router.register(r'category', CategoryListViewSet, basename='Categorias')
+router.register(r'vendor', VendorViewSet, basename='Fornecedores')
+router.register(r'vendor-product-value', VendorValueViewSet, basename='Registar preço produtos')
 
 
 urlpatterns += [
     path(version_api, include(router.urls)),
-    #path(f'{version_api}product/<int:product_id>', ProductDetailViewSet.as_view()),
+    path(f'{version_api}products/<int:product_id>', ProductDetailViewSet.as_view()),
     ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

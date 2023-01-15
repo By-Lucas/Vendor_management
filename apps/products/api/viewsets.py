@@ -1,5 +1,6 @@
 from rest_framework import generics, viewsets
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import permissions, authentication
 from rest_framework import status
@@ -14,6 +15,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication]
     serializer_class = ProductSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('category', 'product_title')
 
     def get_queryset(self):
         query = Product.objects.all()
@@ -41,9 +44,15 @@ class ProductDetailViewSet(APIView):
 
         serializer = ProductSerializer(product_instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
+    def post(self, request):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def put(self, request, product_id, *args, **kwargs):
-    
         product_instance = self.get_object(product_id)
         if not product_instance:
             return Response(
@@ -51,14 +60,7 @@ class ProductDetailViewSet(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        data = {
-            'category': request.data.get('category'), 
-            'product_title': request.data.get('product_title'),
-            'description': request.data.get('description'),
-            'image_product': request.data.get('image_product'),
-            'is_available': request.data.get('is_available'),
-        }
-        serializer = ProductSerializer(instance=product_instance, data=data, partial = True)
+        serializer = ProductSerializer(instance=product_instance, data=request.data, partial= True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)

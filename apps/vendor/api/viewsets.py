@@ -1,11 +1,7 @@
-from rest_framework import generics, viewsets
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework import permissions, authentication
-from rest_framework import status
 
 from vendor.api.serializers import VendorValueSerializer, VendorSerializer
-from accounts.models import User
 from vendor.model.vendor_models import Vendor
 from vendor.model.product_value_model import VendorProductValue
 
