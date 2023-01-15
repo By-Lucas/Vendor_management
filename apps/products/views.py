@@ -32,10 +32,10 @@ def add_product(request):
             product.image_product = image
             product.save()
             messages.success(request, 'Produto adicionaro com sucesso.')
-            return redirect('home')
+            return redirect('product_list')
         else:
             messages.error(request, f'Obteve o seguinte erro: {form.errors}')
-            return redirect('home')
+            return redirect('product_list')
     else:
         form = ProductForm()
     context = {
@@ -56,10 +56,10 @@ def edit_product(request, pk=None):
             product.slug = slugify(product_title)
             form.save()
             messages.success(request, 'Produto atualizado com sucesso.')
-            return redirect('home')
+            return redirect('product_list')
         else:
             messages.success(request, f'Obteve o seguinte erro(s): {form.errors}')
-            return redirect('home')
+            return redirect('product_list')
 
     else:
         form = ProductForm(instance=prod)
