@@ -50,12 +50,10 @@ def edit_product(request, pk=None):
     prod = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
         form = ProductForm(request.POST or None, request.FILES or None, instance=prod)
-        image = request.FILES['image_product']
         if form.is_valid():
             product_title = form.cleaned_data['product_title']
             product = form.save(commit=False)
             product.slug = slugify(product_title)
-            product.image_product = image
             form.save()
             messages.success(request, 'Produto atualizado com sucesso.')
             return redirect('home')
