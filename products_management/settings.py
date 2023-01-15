@@ -28,7 +28,7 @@ DJANGO_APPS = [
 # Application dependent apps
 THIRD_APPS = [
     'rest_framework',
-     'rest_framework.authtoken',
+    'rest_framework.authtoken',
     'django_forms_bootstrap',
     'django_filters',
     'widget_tweaks'

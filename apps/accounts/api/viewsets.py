@@ -16,9 +16,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class UserListViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication]
-    #proteger rotar com autenticacao via token
-    #authentication.SessionAuthentication = para que eu tenha acesso a api se estiver autenticado
+    authentication_classes = [authentication.TokenAuthentication, authentication.SessionAuthentication] #proteger rotar com autenticacao via token
+    # authentication.SessionAuthentication = para que eu tenha acesso a api se estiver autenticado
     def get_queryset(self):
         if self.request.user.is_superuser:
             queryset = User.objects.all()

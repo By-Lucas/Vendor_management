@@ -1,14 +1,17 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
+from products.models.product_model import Product
+from products.models.category_model import Category
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'groups']
+        model = Category
+        fields = ['category_name', 'description']
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
+    #category_set = CategorySerializer(many=True)
     class Meta:
-        model = Group
-        fields = ['url', 'name']
+        model = Product
+        fields = ['category', 'product_title', 'description', 'image_product', 'is_available']
+

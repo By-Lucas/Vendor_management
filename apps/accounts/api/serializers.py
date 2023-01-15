@@ -38,7 +38,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     class Meta:
-        item_set = UserProfileSerializer(many=True)
         model = User
         fields = ('name', 'username','email','role', 'password', 'password_confirm', 'is_staff', 'is_superuser')
         extra_kwargs = {'password': {'write_only': True}}
