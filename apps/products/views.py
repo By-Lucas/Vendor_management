@@ -23,13 +23,13 @@ def get_vendor(request):
 @admin_level_required
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        image = request.POST['image_product']
-        print(image)
+        form = ProductForm(request.POST or None, request.FILES or None)
+        image = request.FILES['image_product']
         if form.is_valid():
             product_title = form.cleaned_data['product_title']
             product = form.save(commit=False)
             product.slug = slugify(product_title)
+            product.image_product = image
             product.save()
             messages.success(request, 'Produto adicionaro com sucesso.')
             return redirect('home')
@@ -49,11 +49,13 @@ def add_product(request):
 def edit_product(request, pk=None):
     prod = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=prod)
+        form = ProductForm(request.POST or None, request.FILES or None, instance=prod)
+        image = request.FILES['image_product']
         if form.is_valid():
             product_title = form.cleaned_data['product_title']
             product = form.save(commit=False)
             product.slug = slugify(product_title)
+            product.image_product = image
             form.save()
             messages.success(request, 'Produto atualizado com sucesso.')
             return redirect('home')

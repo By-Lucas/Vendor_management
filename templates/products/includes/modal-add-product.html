@@ -3,7 +3,7 @@
 <!-- Placeholder for the modal -->
 <div id="modal-product" class="modal fade" tabindex="-1"  aria-hidden="true">
     <div class="modal-dialog">
-        <form action="{% url 'add_product' %}" method="post"  class="modal-content"> {% csrf_token %}
+        <form action="{% url 'add_product' %}" method="post"  class="modal-content" enctype='multipart/form-data'> {% csrf_token %}
             <div class="modal-header">
                 <h5 class="modal-title">Adicionar novo produto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
