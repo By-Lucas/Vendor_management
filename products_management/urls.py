@@ -6,7 +6,7 @@ from rest_framework import routers
 
 from apps.products.api.viewsets import ProductViewSet, CategoryListViewSet, ProductDetailViewSet
 from apps.accounts.api.viewsets import UserViewSet, UserListViewSet, ProfileUserViewSet
-
+from apps.vendor.api.viewsets import VendorViewSet, VendorValueViewSet
 
 version_api = 'api/v1/'
 
@@ -25,6 +25,9 @@ router.register(r'users', UserListViewSet, basename='users')
 router.register(r'profile', ProfileUserViewSet, basename='profile')
 router.register(r'products', ProductViewSet, basename='products')
 router.register(r'category', CategoryListViewSet, basename='category')
+router.register(r'vendor', VendorViewSet, basename='vendor')
+router.register(r'vendor-product-value', VendorValueViewSet, basename='vendor_product_value')
+
 
 urlpatterns += [
     path(version_api, include(router.urls)),

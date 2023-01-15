@@ -13,6 +13,7 @@
             {% if request.user.is_authenticated %}
                <li><a href="{% url 'myAccount' %}">Perfil</a></li>
             {% endif %}
+               <li><a href="{{domain}}/api/v1">Api</a></li>
                </ul>
             </div>
          </div>
