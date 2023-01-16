@@ -1,5 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect, render, HttpResponseRedirect
-from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template.defaultfilters import slugify
