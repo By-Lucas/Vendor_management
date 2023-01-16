@@ -11,6 +11,7 @@ O sisema contem diversas utilidades, irei citar alguma delas -
 - Informações do perfil do Fornecedor é mais ompleta
 - O Admin pode adicionar categorias, produtos e fazer demais alterações
 
+<img src='video.gif' width=500px>
 
 ### remover o `-example` do arquivo `.env-example`
 
