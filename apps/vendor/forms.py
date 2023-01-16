@@ -13,4 +13,4 @@ class VendorForm(forms.ModelForm):
 class VendorProductValueForm(forms.ModelForm):
     class Meta:
         model = VendorProductValue
-        fields = ['vendor', 'product', 'price_product']
+        fields = '__all__'

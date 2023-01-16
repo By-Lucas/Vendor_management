@@ -72,30 +72,27 @@ def productitems_by_category(request, pk=None):
     }
     return render(request, 'vendor/productitems_by_category.html', context)
 
+
 @login_required(login_url='login')
+@vendor_level_required
 def add_price_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
     vendor = Vendor.objects.get(user=request.user.id)
     my_price = VendorProductValue.objects.filter(vendor=vendor.id, product=pk).first()
-
-    if my_price:
-        messages.warning(request, 'Você já adicionou preço a este produto')
-        return redirect('product_list')
-
+    
     if request.method == 'POST':
-        form = VendorProductValueForm(request.POST, instance=vendor)
-       
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.instance.vendor = vendor
-            product.instance.product = product
-            product.save()
-            messages.success(request, 'Preço adicionado ao produto')
+        if my_price:
+            messages.warning(request, 'Você já adicionou preço a este produto')
             return redirect('product_list')
 
+        create_value = VendorProductValue.objects.create(vendor=vendor, product=product, price_product=request.POST['price_product'])
+        print(create_value)
+        if create_value:
+           messages.success(request, 'Preço adicionado ao produto')
+           return redirect('product_list')
+
         else:
-            print(form.errors)
-            messages.error(request, f'Obteve o seguinte erro {form.errors}')
+            messages.error(request, f'Obteve um erro ao adicionar preço ao produto')
             return redirect('product_list')
 
 
