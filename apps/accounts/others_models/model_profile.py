@@ -50,7 +50,7 @@ class UserProfile(models.Model):
 
 
 class Contact(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     contact = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):

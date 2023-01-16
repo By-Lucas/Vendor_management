@@ -72,14 +72,8 @@ def registerVendor(request):
             password = form.cleaned_data['password']
             confirm_password = form.cleaned_data['confirm_password']
             if password != confirm_password:
-                return HttpResponse(
-                    status=204,
-                    headers={
-                        'HX-Trigger': json.dumps({
-                        "showMessage": "Sua senha está incorreta, verifique e tente novamente"
-                        })
-                    }
-                ) 
+                messages.error(request, 'Senhas são diferentes.')
+                return redirect('login')
 
             user = User.objects.create_user(name=name, email=email, username=username, password=password)
             user.role = commons.VENDOR
@@ -98,11 +92,10 @@ def registerVendor(request):
             email_template = 'accounts/emails/account_verification_email.html'
             send_verification_email(request, user, mail_subject, email_template)
 
-            messages.success(request, 'Sua conta foi cadastrada com sucesso! Por favor, aguarde a aprovação.')
-            return redirect('registerVendor')
+            messages.success(request, 'Sua conta foi cadastrada com sucesso, verifique seu email para ativa-la.')
+            return redirect('home')
         else:
-            print('formulário inválido')
-            print(form.errors)
+            messages.error(request, f'Tivemos o seguinte erro ao registrar novo usuário: {form.errors}')
     else:
         form = UserForm()
         v_form = VendorForm()
@@ -170,7 +163,7 @@ class ProfileUpdateView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/user-profile.html'
     def get(self, request):
         context = {}
-        user = request.user#User.objects.filter(user=request.user.id).first()
+        user = request.user
         profile = user.userprofile
         
         if request.user.role == commons.VENDOR or request.user.is_superuser:
